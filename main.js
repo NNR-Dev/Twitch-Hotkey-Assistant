@@ -10,6 +10,9 @@ class TwitchConnectionInfo {
     this.key_obtained_time = key_obtained_time
   }
 }
+
+
+
 var windows = new Set();
 // var key_name_to_code = {
 //   "f1": Key.f1,
@@ -137,6 +140,6 @@ function create_settings_window(){
   settings_window.setMenu(null)
 }
 
-async function get_custom_rewards(){
-  return 
-}
+// async function get_custom_rewards(){
+//   return 
+// }
