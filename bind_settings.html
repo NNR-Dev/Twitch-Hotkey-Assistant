@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap Resume Page Template</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container text-white bg-dark p-4 overflow-auto" id="scrollable">
+    	<div>
+		  <button type="button" onclick="create_binding_panel()" id="twitch_auth_button">Authenticate with Twitch</button>
+    	</div>
+		<div>
+			<select id="reward_selecter">
+				<option value="1">One</option>
+			</select>
+    		<input type="text" id="user_key_field">
+			<select id="key_selecter">
+				<option value="a">A</option>
+				<option value="b">B</option>
+			</select>
+		</div>
+		<div>
+			<label for="textfield">Twitch Username:</label>
+    	<input type="text" id="username_field">
+		</div>
+		<div>
+		  <button type="button" id="submit_auth_button">Submit User Settings</button>
+    	</div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap-4.4.1.js"></script>
+  </body>
+<script src="./bindings_renderer.js"></script>
+</html>
