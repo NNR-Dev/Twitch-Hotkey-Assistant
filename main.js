@@ -11,7 +11,8 @@ class TwitchConnectionInfo {
   }
 }
 
-
+var custom_rewards=[];
+var bindings_window;
 
 var windows = new Set();
 // var key_name_to_code = {
@@ -28,7 +29,7 @@ var windows = new Set();
 //   "f11": Key.f11,
 //   "f12": Key.f12,
 // }
-
+var main_window;
 var twitch_connection_info = new TwitchConnectionInfo(app_id="snbnlpo27abzy10fsg82bqqly26f80", user_key=null, user_id=null, username=null, session_id=null, subscription_type=null,
 reward_list=null, key_obtained_time=null);
 var settings_window;
@@ -52,16 +53,18 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
   }
 
   app.whenReady().then(() => {
+    //ipcMain.handle('get-custom-rewards', get_custom_rewards)
     ipcMain.on('log-message', log_message);
     ipcMain.on("create-settings-window", create_settings_window);
     ipcMain.on("create-auth-window", create_auth_window);
     ipcMain.on("save-auth-settings", save_auth_settings);
     ipcMain.on("create-bindings-window", create_bindings_window);
+    
     createWindow("index.html");
   
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow("index.html");
+        main_window = createWindow("index.html");
       }
     });
   });
@@ -84,9 +87,9 @@ function check_user_token_expiry(user_token){
   axios.get(url, config).then((response) => {
     
     if (response.status == 200){
-      console.log(response);
-      let expiry_time = response.data.expires_in;
-      console.log(expiry_time);
+      //console.log(response);
+      let expiry_time = response.data.expires_in; //rain#26915
+      //console.log(expiry_time);
       if (expiry_time < 2*86400){
         dialog.showMessageBox(options={title: 'Key Expires Soon', message:'User key will expire soon. Consider generating a new user key.', type:'warning'})
       }
@@ -108,7 +111,7 @@ function save_auth_settings(event, user_key, username){
 function retrieve_user_id(username){
   // let req = new XMLHttpRequest();
   let url = "https://api.twitch.tv/helix/users?login="+username;
-  console.log(`Bearer ${twitch_connection_info.user_key}`);
+  //console.log(`Bearer ${twitch_connection_info.user_key}`);
   let config = {
     headers: {
       'Authorization': `Bearer ${twitch_connection_info.user_key}`,
@@ -116,16 +119,41 @@ function retrieve_user_id(username){
     }
   };
   axios.get(url, config).then((response) => {
-      console.log(response.data);
+      //console.log(response.data);
       twitch_connection_info.user_id=response.data.data[0].id;
-      console.log(twitch_connection_info.user_id);
+      //console.log(twitch_connection_info.user_id);
     });
   
 }
 
-function create_bindings_window(){
+async function create_bindings_window(){
+  await retrieve_channel_point_rewards();
   bindings_window = createWindow("bind_settings.html", 400, 600, false);
   bindings_window.setMenu(null);
+  get_custom_rewards()
+}
+
+async function retrieve_channel_point_rewards(){
+  custom_rewards = [];
+  let url = "https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id="+twitch_connection_info.user_id+"&perPage=50"
+  //console.log(`Bearer ${twitch_connection_info.user_key}`);
+  let config = {
+    headers: {
+      'Authorization': `Bearer ${twitch_connection_info.user_key}`,
+      'Client-Id': twitch_connection_info.app_id
+    }
+  };
+  //console.log(url);
+  return axios.get(url, config).then((response) => {
+    //console.log(response.data.data);
+    response.data.data.forEach(element => {
+      custom_rewards.push(element.title);
+      //console.log(element.title);
+    });
+      // console.log(response.data);
+      // twitch_connection_info.user_id=response.data.data[0].id;
+      // console.log(twitch_connection_info.user_id);
+    });
 }
 
 function create_auth_window(){
@@ -140,6 +168,11 @@ function create_settings_window(){
   settings_window.setMenu(null)
 }
 
-// async function get_custom_rewards(){
-//   return 
-// }
+function get_custom_rewards(){
+  //console.log(custom_rewards);
+  //console.log(bindings_window);
+  bindings_window.webContents.on('did-finish-load', function() {
+    bindings_window.webContents.send('custom-rewards', custom_rewards);
+  });
+  //console.log("sent");
+}

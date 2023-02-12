@@ -1,14 +1,34 @@
+//var ipcRenderer = require('electron').ipcRenderer;
+var rewards = []
+
+// ipcRenderer.on('rewards-list', function (event,store) {
+//     rewards = store;
+// });
+
+//rewards = await window.electronAPI.get_rewards()
 const scrollable_div = document.getElementById('scrollable');
+
+window.electronAPI.get_rewards((event, value) => {
+    rewards = value;
+})
+
 
 
 function create_binding_panel(){
+    window.electronAPI.log_message(rewards);
     new_div = document.createElement("div");
     new_div.setAttribute("class", "bind_div");
 
     selecter = document.createElement("select");
     selecter.setAttribute("class", "reward_selecter");
+    //selecter.setAttribute("width", 300);
     new_div.appendChild(selecter);
-
+    rewards.forEach(element => {
+        temp_option = document.createElement("option");
+        temp_option.value=element;
+        temp_option.textContent=element;
+        selecter.appendChild(temp_option);
+    });
     duration_field = document.createElement("input");
     duration_field.setAttribute("type", "text");
     duration_field.setAttribute("class", "duration_field");
