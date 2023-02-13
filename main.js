@@ -13,6 +13,8 @@ class TwitchConnectionInfo {
 
 var custom_rewards=[];
 var bindings_window;
+var hotkey_bind_dict = {};
+var hotkey_duration_dict = {};
 
 var windows = new Set();
 // var key_name_to_code = {
@@ -59,7 +61,7 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
     ipcMain.on("create-auth-window", create_auth_window);
     ipcMain.on("save-auth-settings", save_auth_settings);
     ipcMain.on("create-bindings-window", create_bindings_window);
-    
+    ipcMain.on("send-hotkey-dicts", send_hotkey_dicts);
     createWindow("index.html");
   
     app.on('activate', () => {
@@ -75,6 +77,15 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
   });
 function log_message(event, msg){
   console.log(msg);
+}
+
+function send_hotkey_dicts(event, bind_dict, duration_dict){
+  console.log("Doing binding!");
+  console.log(bind_dict);
+  console.log(duration_dict);
+  hotkey_bind_dict = bind_dict;
+  hotkey_duration_dict = duration_dict;
+  
 }
 
 function check_user_token_expiry(user_token){

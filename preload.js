@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     create_auth_window: () => ipcRenderer.send("create-auth-window"),
     save_auth_settings: (user_key, username) => ipcRenderer.send("save-auth-settings", user_key, username),
     create_bindings_window: () => ipcRenderer.send("create-bindings-window"),
+    send_hotkey_dicts: (bind_dict, duration_dict) => ipcRenderer.send("send-hotkey-dicts", bind_dict, duration_dict),
     get_rewards: (msg) => ipcRenderer.on('custom-rewards', msg),
 });
 
