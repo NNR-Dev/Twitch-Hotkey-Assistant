@@ -8,12 +8,13 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
   </head>
-  <body>
-    <div class="container text-white bg-dark p-4 overflow-auto" id="scrollable">
-    	<div>
-		  <button type="button" onclick="create_binding_panel()" id="twitch_auth_button">Authenticate with Twitch</button>
-    	</div>
-		<div>
+  <body class="bg-dark">
+    <div class="container text-white bg-dark p-4">
+		<div class="overflow-auto"  id="scrollable" style="margin-bottom:1cm;">
+			<div style="margin-bottom:0.3cm;">
+			  <button type="button" onclick="create_binding_panel()" id="twitch_auth_button">Add New Hotkey</button>
+			</div>
+		<!--<div>
 			<select id="reward_selecter">
 				<option value="1">One</option>
 			</select>
@@ -22,15 +23,13 @@
 				<option value="a">A</option>
 				<option value="b">B</option>
 			</select>
+		</div>-->
 		</div>
 		<div>
-			<label for="textfield">Twitch Username:</label>
-    	<input type="text" id="username_field">
-		</div>
-		<div>
-		  <button type="button" id="submit_auth_button">Submit User Settings</button>
+		  <button type="button" id="save_bind_button">Save hotkeys</button>
     	</div>
     </div>
+	  
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/jquery-3.4.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

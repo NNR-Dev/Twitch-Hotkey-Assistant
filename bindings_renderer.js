@@ -18,6 +18,7 @@ function create_binding_panel(){
     window.electronAPI.log_message(rewards);
     new_div = document.createElement("div");
     new_div.setAttribute("class", "bind_div");
+    new_div.setAttribute("style", "margin-bottom:0.2cm;")
 
     selecter = document.createElement("select");
     selecter.setAttribute("class", "reward_selecter");
