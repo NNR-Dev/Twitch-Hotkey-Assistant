@@ -8,6 +8,6 @@ auth_button.addEventListener('click', () => {
 const submit_button = document.getElementById('submit_auth_button');
 submit_button.addEventListener('click', () => {
     let user_key = document.getElementById('user_key_field').value;
-    let username = document.getElementById('username_field').value;
-    window.electronAPI.save_auth_settings(user_key, username);
+    //let username = document.getElementById('username_field').value;
+    window.electronAPI.save_auth_settings(user_key);
 });

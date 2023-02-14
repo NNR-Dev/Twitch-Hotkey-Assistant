@@ -88,14 +88,14 @@ function send_hotkey_dicts(event, bind_dict, duration_dict){
   
 }
 
-function check_user_token_expiry(user_token){
+function check_user_token_expiry(){
   let url = "https://id.twitch.tv/oauth2/validate"
   let config = {
     headers: {
       'Authorization': `Bearer ${twitch_connection_info.user_key}`
     }
   }
-  axios.get(url, config).then((response) => {
+  return axios.get(url, config).then((response) => {
     
     if (response.status == 200){
       //console.log(response);
@@ -104,37 +104,56 @@ function check_user_token_expiry(user_token){
       if (expiry_time < 2*86400){
         dialog.showMessageBox(options={title: 'Key Expires Soon', message:'User key will expire soon. Consider generating a new user key.', type:'warning'})
       }
-      return
+      return true
     } else{
       dialog.showMessageBox(options={title: 'Error', message: 'User key invalid! Are you sure you entered your user key correctly?', type:'error'});
-      return -1;
+      return false;
     }
+  }).catch(() => {
+    dialog.showMessageBox(options={title: 'Error', message: 'User key invalid! Are you sure you entered your user key correctly?', type:'error'});
+    return false;
   });
 }
 
-function save_auth_settings(event, user_key, username){
+async function save_auth_settings(event, user_key){
   twitch_connection_info.user_key = user_key;
-  let token_expiry_time = check_user_token_expiry(user_key);
-  retrieve_user_id(username);
-  settings_window.close();
+  let token_res = await check_user_token_expiry();
+  if (token_res){
+    token_res = await retrieve_user_id();
+    if (token_res){
+        settings_window.close();
+    }
+  }
+  
+  // console.log(status);
+  // let success = await status;
+  // console.log(success);
+  // if (success){
+    
+  // }
 }
 
-function retrieve_user_id(username){
+
+function retrieve_user_id(){
   // let req = new XMLHttpRequest();
-  let url = "https://api.twitch.tv/helix/users?login="+username;
-  //console.log(`Bearer ${twitch_connection_info.user_key}`);
+  let url = "https://id.twitch.tv/oauth2/validate"
   let config = {
     headers: {
-      'Authorization': `Bearer ${twitch_connection_info.user_key}`,
-      'Client-Id': twitch_connection_info.app_id
+      'Authorization': `Bearer ${twitch_connection_info.user_key}`
     }
-  };
-  axios.get(url, config).then((response) => {
-      //console.log(response.data);
-      twitch_connection_info.user_id=response.data.data[0].id;
-      //console.log(twitch_connection_info.user_id);
-    });
-  
+  }
+  return axios.get(url, config).then((response) => {
+    if (response.status == 200){
+      twitch_connection_info.user_id = response.data.user_id; //rain#26915
+      return true;
+    } else{
+      dialog.showMessageBox(options={title: 'Error', message: 'User key invalid! Are you sure you entered your user key correctly?', type:'error'});
+      return false;
+    }
+  }).catch(() => {
+    dialog.showMessageBox(options={title: 'Error', message: 'User key invalid! Are you sure you entered your user key correctly?', type:'error'});
+    return false;
+  });
 }
 
 async function create_bindings_window(){
@@ -175,7 +194,7 @@ function create_auth_window(){
 }
 
 function create_settings_window(){
-  settings_window = createWindow("settings.html", 400, 207, false);
+  settings_window = createWindow("settings.html", 400, 172, false);
   settings_window.setMenu(null)
 }
 
