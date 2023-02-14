@@ -157,10 +157,13 @@ function retrieve_user_id(){
 }
 
 async function create_bindings_window(){
-  await retrieve_channel_point_rewards();
-  bindings_window = createWindow("bind_settings.html", 400, 600, false);
-  bindings_window.setMenu(null);
-  get_custom_rewards()
+  let success = await retrieve_channel_point_rewards();
+  if (success){
+    bindings_window = createWindow("bind_settings.html", 400, 600, false);
+    bindings_window.setMenu(null);
+    get_custom_rewards()
+  }
+  
 }
 
 async function retrieve_channel_point_rewards(){
@@ -180,9 +183,13 @@ async function retrieve_channel_point_rewards(){
       custom_rewards.push(element.title);
       //console.log(element.title);
     });
+    return true;
       // console.log(response.data);
       // twitch_connection_info.user_id=response.data.data[0].id;
       // console.log(twitch_connection_info.user_id);
+    }).catch(() => {
+      dialog.showMessageBox(options={title: 'Error', message: 'Could not retrieve channel point rewards. Have you entered your authentication key?', type:'error'});
+      return false;
     });
 }
 
