@@ -265,6 +265,10 @@ var keyboardMap = [
 // ipcRenderer.on('rewards-list', function (event,store) {
 //     rewards = store;
 // });
+
+var hotkey_bind_dict = {};
+var hotkey_duration_dict = {};
+
 document.addEventListener("keydown", listen_for_key);
 //rewards = await window.electronAPI.get_rewards()
 const scrollable_div = document.getElementById('scrollable');
@@ -273,10 +277,42 @@ window.electronAPI.get_rewards((event, value) => {
     rewards = value;
 })
 
+window.electronAPI.get_hotkey_dicts((event, bind_dict, duration_dict) => {
+    hotkey_bind_dict = bind_dict;
+    hotkey_duration_dict = duration_dict;
+    load_binding_panels();
+})
+
 //spaghetti courtesy of https://stackoverflow.com/a/24457420
 function isNumeric(value) {
     return /^\d+$/.test(value);
 }
+
+function load_binding_panels(){
+    window.electronAPI.log_message("starting loading");
+    for (const [key, values] of Object.entries(hotkey_bind_dict)){
+        duration = hotkey_duration_dict[key];
+        values.forEach(value => {        
+            let new_div = create_binding_panel();
+            var reward_selecter = new_div.querySelector(".reward_selecter")
+            change_selecter_value(key, reward_selecter);
+            var duration_field = new_div.querySelector(".duration_field");
+            duration_field.value = duration;
+            btn = new_div.querySelector(".bind_button")
+            btn.value = value;
+            btn.innerHTML = value;
+        });
+
+    }
+}
+
+function change_selecter_value(value, select){
+    window.electronAPI.log_message("changing val");
+    const $options = Array.from(select.options);
+    const optionToSelect = $options.find(item => item.text ===value);
+    select.value = optionToSelect.value;
+    window.electronAPI.log_message("val changed");
+  };
 
 function listen_for_key(e){
     window.electronAPI.log_message(e.target.className);
@@ -304,8 +340,8 @@ function listen_for_key(e){
 
 
 function get_binding_data(){
-    var hotkey_bind_dict = {};
-    var hotkey_duration_dict = {};
+    hotkey_bind_dict = {}
+    hotkey_duration_dict = {}
     let divs = document.querySelectorAll(".bind_div");
     window.electronAPI.log_message(divs.length);
     for (let node of divs){
@@ -332,8 +368,8 @@ function get_binding_data(){
 }
 
 function create_binding_panel(){
-    window.electronAPI.log_message(rewards);
-    let new_div = document.createElement("div");
+    //window.electronAPI.log_message(rewards);
+    var new_div = document.createElement("div");
     new_div.setAttribute("class", "bind_div");
     new_div.setAttribute("style", "margin-bottom:0.2cm;")
 
@@ -364,11 +400,11 @@ function create_binding_panel(){
     new_div.appendChild(bind_button);
 
     scrollable_div.appendChild(new_div);
-
+    return new_div;
     
 }
 
-auth_button.addEventListener('click', () => {
-    window.electronAPI.log_message("yoyoyoyoy");
-    window.electronAPI.create_auth_window();
-});
+// auth_button.addEventListener('click', () => {
+//     window.electronAPI.log_message("yoyoyoyoy");
+//     window.electronAPI.create_auth_window();
+// });

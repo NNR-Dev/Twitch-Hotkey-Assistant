@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     create_bindings_window: () => ipcRenderer.send("create-bindings-window"),
     send_hotkey_dicts: (bind_dict, duration_dict) => ipcRenderer.send("send-hotkey-dicts", bind_dict, duration_dict),
     get_rewards: (msg) => ipcRenderer.on('custom-rewards', msg),
+    get_hotkey_dicts: (bind_dict, duration_dict) => ipcRenderer.on('get-hotkey-dicts', bind_dict, duration_dict),
 });
 
 contextBridge.exposeInMainWorld('versions', {

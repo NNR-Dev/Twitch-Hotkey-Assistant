@@ -161,7 +161,9 @@ async function create_bindings_window(){
   if (success){
     bindings_window = createWindow("bind_settings.html", 400, 600, false);
     bindings_window.setMenu(null);
-    get_custom_rewards()
+    get_custom_rewards();
+    get_dicts(hotkey_bind_dict, hotkey_duration_dict);
+    
   }
   
 }
@@ -204,6 +206,14 @@ function create_settings_window(){
   settings_window = createWindow("settings.html", 400, 172, false);
   settings_window.setMenu(null)
 }
+
+function get_dicts(){
+  console.log("sending data back over!");
+  bindings_window.webContents.on('did-finish-load', function() {
+    bindings_window.webContents.send('get-hotkey-dicts', hotkey_bind_dict, hotkey_duration_dict);
+  });
+}
+
 
 function get_custom_rewards(){
   //console.log(custom_rewards);
