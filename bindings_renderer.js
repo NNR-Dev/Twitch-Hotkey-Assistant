@@ -297,10 +297,20 @@ function load_binding_panels(){
             var reward_selecter = new_div.querySelector(".reward_selecter")
             change_selecter_value(key, reward_selecter);
             var duration_field = new_div.querySelector(".duration_field");
-            duration_field.value = duration;
+            if (duration == "0"){
+                duration_field.value = "";
+            } else {
+                duration_field.value = duration;
+            }
             btn = new_div.querySelector(".bind_button")
-            btn.value = value;
-            btn.innerHTML = value;
+            if (value === "key_empty" || value === ""){
+                btn.value = "key_empty";
+                btn.innerHTML = "Click to Bind";
+            } else {
+                btn.value = value;
+                btn.innerHTML = value;
+            }
+            
         });
 
     }

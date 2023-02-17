@@ -9,6 +9,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     send_hotkey_dicts: (bind_dict, duration_dict) => ipcRenderer.send("send-hotkey-dicts", bind_dict, duration_dict),
     get_rewards: (msg) => ipcRenderer.on('custom-rewards', msg),
     get_hotkey_dicts: (bind_dict, duration_dict) => ipcRenderer.on('get-hotkey-dicts', bind_dict, duration_dict),
+    get_auth_key: (key) => ipcRenderer.on('get-auth-key', key),
+    save_wrapper: () => ipcRenderer.send("save-wrapper"),
 });
 
 contextBridge.exposeInMainWorld('versions', {

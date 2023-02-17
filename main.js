@@ -1,20 +1,22 @@
 class TwitchConnectionInfo {
-  constructor(app_id, user_key, user_id, username, session_id, subscription_type, reward_list, key_obtained_time){
-    this.app_id = app_id
-    this.user_key = user_key
-    this.user_id = user_id
-    this.username = username
-    this.session_id = session_id
-    this.subscription_type = subscription_type
-    this.reward_list = reward_list
-    this.key_obtained_time = key_obtained_time
+  constructor(app_id, user_key, user_id, username, session_id, subscription_type, reward_list, key_obtained_time, hotkey_bind_dict, hotkey_duration_dict){
+    this.app_id = app_id;
+    this.user_key = user_key;
+    this.user_id = user_id;
+    this.username = username;
+    this.session_id = session_id;
+    this.subscription_type = subscription_type;
+    this.reward_list = reward_list;
+    this.key_obtained_time = key_obtained_time;
+    this.hotkey_bind_dict = hotkey_bind_dict;
+    this.hotkey_duration_dict = hotkey_duration_dict;
   }
 }
 
 var custom_rewards=[];
 var bindings_window;
-var hotkey_bind_dict = {};
-var hotkey_duration_dict = {};
+//var hotkey_bind_dict = {};
+//var hotkey_duration_dict = {};
 
 var windows = new Set();
 // var key_name_to_code = {
@@ -32,13 +34,19 @@ var windows = new Set();
 //   "f12": Key.f12,
 // }
 var main_window;
-var twitch_connection_info = new TwitchConnectionInfo(app_id="snbnlpo27abzy10fsg82bqqly26f80", user_key=null, user_id=null, username=null, session_id=null, subscription_type=null,
-reward_list=null, key_obtained_time=null);
+var twitch_connection_info;// = new TwitchConnectionInfo(app_id="snbnlpo27abzy10fsg82bqqly26f80", user_key=null, user_id=null, username=null, session_id=null, subscription_type=null,
+//reward_list=null, key_obtained_time=null, hotkey_bind_dict = hotkey_bind_dict, hotkey_duration_dict = hotkey_duration_dict);
 var settings_window;
+
 const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+const storage = require('electron-json-storage')
 const path = require('path');
 const axios = require('axios');
-const { create } = require('domain')
+const { create } = require('domain');
+const { write, read } = require('fs');
+config_path = path.join(app.getAppPath(), 'User_Data');
+storage.setDataPath(config_path);
+
 const createWindow = (html_path, width = 800, height = 600, is_resizable = true) => {
     const win = new BrowserWindow({
       width: width,
@@ -62,11 +70,13 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
     ipcMain.on("save-auth-settings", save_auth_settings);
     ipcMain.on("create-bindings-window", create_bindings_window);
     ipcMain.on("send-hotkey-dicts", send_hotkey_dicts);
+    ipcMain.on("save-wrapper", save_wrapper);
     createWindow("index.html");
-  
+    read_data_from_file();
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) {
         main_window = createWindow("index.html");
+        
       }
     });
   });
@@ -79,13 +89,46 @@ function log_message(event, msg){
   console.log(msg);
 }
 
+function save_wrapper(){
+  console.log(app.getPath('userData'));
+  write_data_to_file(twitch_connection_info);
+}
+
+function write_data_to_file(connection_info){
+  json_string = JSON.stringify(connection_info);
+  console.log(json_string)
+  storage.set('config.json', json_string);
+}
+
+function read_data_from_file(){
+  console.log(storage.getDataPath());
+  var json_obj = JSON.parse(storage.getSync('config.json'));
+  console.log(json_obj);
+  console.log(json_obj["user_key"]);
+  new_app_id = json_obj.app_id === undefined ? "snbnlpo27abzy10fsg82bqqly26f80" : json_obj.app_id;
+  new_user_key = json_obj.user_key === undefined ? "" : json_obj.user_key;
+  new_user_id = json_obj.user_id === undefined ? "" : json_obj.user_id;
+  new_username = json_obj.username === undefined ? "" : json_obj.username;
+  new_session_id = json_obj.session_id === undefined ? "" : json_obj.session_id;
+  new_subscription_type = json_obj.subscription_type === undefined ? "" : json_obj.subscription_type;
+  new_reward_list = json_obj.reward_list === undefined ? [] : json_obj.reward_list;
+  new_key_obtained_time = json_obj.key_obtained_time === undefined ? "" : json_obj.key_obtained_time;
+  new_hotkey_bind_dict = json_obj.hotkey_bind_dict === undefined ? {} : json_obj.hotkey_bind_dict;
+  new_hotkey_duration_dict = json_obj.hotkey_duration_dict === undefined ? {} : json_obj.hotkey_duration_dict;
+  twitch_connection_info = new TwitchConnectionInfo(new_app_id, new_user_key, new_user_id, 
+                                                    new_username, new_session_id, new_subscription_type,
+                                                    new_reward_list, new_key_obtained_time, new_hotkey_bind_dict,
+                                                    new_hotkey_duration_dict);
+  console.log(json_obj);
+}
+
 function send_hotkey_dicts(event, bind_dict, duration_dict){
   console.log("Doing binding!");
   console.log(bind_dict);
   console.log(duration_dict);
-  hotkey_bind_dict = bind_dict;
-  hotkey_duration_dict = duration_dict;
-  
+  twitch_connection_info.hotkey_bind_dict = bind_dict;
+  twitch_connection_info.hotkey_duration_dict = duration_dict;
+  bindings_window.close();
 }
 
 function check_user_token_expiry(){
@@ -162,7 +205,7 @@ async function create_bindings_window(){
     bindings_window = createWindow("bind_settings.html", 400, 600, false);
     bindings_window.setMenu(null);
     get_custom_rewards();
-    get_dicts(hotkey_bind_dict, hotkey_duration_dict);
+    get_dicts(twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict);
     
   }
   
@@ -205,12 +248,21 @@ function create_auth_window(){
 function create_settings_window(){
   settings_window = createWindow("settings.html", 400, 172, false);
   settings_window.setMenu(null)
+  if (twitch_connection_info.user_key !== ""){
+    get_key(twitch_connection_info.user_key);
+  }
+}
+
+function get_key(key){
+  settings_window.webContents.on('did-finish-load', function() {
+    settings_window.webContents.send('get-auth-key', key);
+  });
 }
 
 function get_dicts(){
   console.log("sending data back over!");
   bindings_window.webContents.on('did-finish-load', function() {
-    bindings_window.webContents.send('get-hotkey-dicts', hotkey_bind_dict, hotkey_duration_dict);
+    bindings_window.webContents.send('get-hotkey-dicts', twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict);
   });
 }
 

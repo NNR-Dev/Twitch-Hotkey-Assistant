@@ -11,3 +11,7 @@ submit_button.addEventListener('click', () => {
     //let username = document.getElementById('username_field').value;
     window.electronAPI.save_auth_settings(user_key);
 });
+
+window.electronAPI.get_auth_key((event, key) => {
+    document.getElementById('user_key_field').value = key;
+})
