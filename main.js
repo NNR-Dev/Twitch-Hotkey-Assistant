@@ -71,7 +71,8 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
     ipcMain.on("create-bindings-window", create_bindings_window);
     ipcMain.on("send-hotkey-dicts", send_hotkey_dicts);
     ipcMain.on("save-wrapper", save_wrapper);
-    createWindow("index.html");
+    ipcMain.on("test-create-feed-label", test_create_feed_label)
+    main_window = createWindow("index.html");
     read_data_from_file();
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) {
@@ -209,6 +210,10 @@ async function create_bindings_window(){
     
   }
   
+}
+
+function test_create_feed_label(){
+  main_window.webContents.send("add-feed-label", "test text!");
 }
 
 async function retrieve_channel_point_rewards(){

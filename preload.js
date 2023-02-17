@@ -10,6 +10,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     get_rewards: (msg) => ipcRenderer.on('custom-rewards', msg),
     get_hotkey_dicts: (bind_dict, duration_dict) => ipcRenderer.on('get-hotkey-dicts', bind_dict, duration_dict),
     get_auth_key: (key) => ipcRenderer.on('get-auth-key', key),
+    add_feed_label: (string) => ipcRenderer.on('add-feed-label', string),
+    test_create_feed_label: () => ipcRenderer.send("test-create-feed-label"),
     save_wrapper: () => ipcRenderer.send("save-wrapper"),
 });
 

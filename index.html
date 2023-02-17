@@ -11,14 +11,18 @@
       http-equiv="X-Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
+	  <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
     <title>Hello from Electron renderer!</title>
   </head>
-  <body>
-  	<button id="settings_btn" type="button">User Config</button>
-  	<button id="bindings_btn" type="button">Hotkey Config</button>
-	<button id="save_btn" type="button">Save Config Settings</button>
-    <h1>Hello from Electron renderer!</h1>
-    <p>👋</p>
+  <body tabindex="-1" class="bg-dark">
+	 <div class="container text-white bg-dark p-4">
+		<button id="settings_btn" type="button">User Config</button>
+		<button id="bindings_btn" type="button">Hotkey Config</button>
+		<button id="save_btn" type="button">Save Config Settings</button>
+		<button id="test_add_text_btn" type="button">Add text</button>
+		<div class="feed_scroll" id="text_feed"></div>
+    		<p>👋</p>
+		 </div>
   </body>
   <script src="./renderer.js"></script>
   <!-- <script>

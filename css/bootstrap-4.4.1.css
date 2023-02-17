@@ -67,6 +67,32 @@ body {
   outline: 0 !important;
 }
 
+div.bind_scroll {
+  margin:4px, 4px;
+  padding:4px;
+  height:400px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align:justify;
+}
+
+.feed_label{
+  display:inline;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+div.feed_scroll {
+  margin-top: 6px;
+  padding:10px;
+  height:400px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align:justify;
+  background-color: #57616B;
+  border-radius: 10px;
+}
+
 hr {
   box-sizing: content-box;
   height: 0;
