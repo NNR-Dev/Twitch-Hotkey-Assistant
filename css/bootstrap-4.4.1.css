@@ -84,6 +84,7 @@ div.bind_scroll {
 
 div.feed_scroll {
   margin-top: 6px;
+  margin-bottom: 6px;
   padding:10px;
   height:400px;
   overflow-x: hidden;

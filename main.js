@@ -15,28 +15,16 @@ class TwitchConnectionInfo {
 
 var custom_rewards=[];
 var bindings_window;
+
 //var hotkey_bind_dict = {};
 //var hotkey_duration_dict = {};
 
 var windows = new Set();
-// var key_name_to_code = {
-//   "f1": Key.f1,
-//   "f2": Key.f2,
-//   "f3": Key.f3,
-//   "f4": Key.f4,
-//   "f5": Key.f5,
-//   "f6": Key.f6,
-//   "f7": Key.f7,
-//   "f8": Key.f8,
-//   "f9": Key.f9,
-//   "f10": Key.f10,
-//   "f11": Key.f11,
-//   "f12": Key.f12,
-// }
 var main_window;
 var twitch_connection_info;// = new TwitchConnectionInfo(app_id="snbnlpo27abzy10fsg82bqqly26f80", user_key=null, user_id=null, username=null, session_id=null, subscription_type=null,
 //reward_list=null, key_obtained_time=null, hotkey_bind_dict = hotkey_bind_dict, hotkey_duration_dict = hotkey_duration_dict);
 var settings_window;
+var event_queue = [];
 
 const {app, BrowserWindow, ipcMain, dialog} = require('electron');
 const storage = require('electron-json-storage')
@@ -44,6 +32,10 @@ const path = require('path');
 const axios = require('axios');
 const { create } = require('domain');
 const { write, read } = require('fs');
+const WebSocket = require('ws');
+const request = require('request');
+const AsyncLock = require('async-lock');
+var lock = new AsyncLock();
 config_path = path.join(app.getAppPath(), 'User_Data');
 storage.setDataPath(config_path);
 
@@ -71,7 +63,8 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
     ipcMain.on("create-bindings-window", create_bindings_window);
     ipcMain.on("send-hotkey-dicts", send_hotkey_dicts);
     ipcMain.on("save-wrapper", save_wrapper);
-    ipcMain.on("test-create-feed-label", test_create_feed_label)
+    ipcMain.on("test-create-feed-label", test_create_feed_label);
+    ipcMain.on("start-listener", start_listener);
     main_window = createWindow("index.html");
     read_data_from_file();
     app.on('activate', () => {
@@ -86,6 +79,78 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
   app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
   });
+
+function start_listener(){
+  x="yo"
+  lock.acquire(event_queue, function(title) {
+    event_queue.push(x);
+  }).then(console.log(event_queue));
+  let ws = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws');
+  ws.onopen = function(){
+    
+  }
+  ws.on('message', function message(data){
+    ws_parse_message(data);
+  });
+}
+
+function ws_parse_message(msg){
+  msg = JSON.parse(msg);
+  let message_type = msg.metadata.message_type;
+  if (message_type === "session_welcome"){
+    twitch_connection_info.session_id = msg.payload.session.id;
+    ws_subscribe_topic();
+  } else if (message_type === "session_keepalive"){
+    console.log("Keepalive message");
+    lock.acquire(event_queue, function() {
+      console.log(event_queue);
+    }).then(function(){});
+  } else if (message_type === "notification") {
+    console.log("Notification");
+    if(msg.metadata.subscription_type === twitch_connection_info.subscription_type){
+      console.log("Subscription");
+      let redemption_status = msg.payload.event.status;
+      if (redemption_status === "fulfilled"){
+        console.log("Fulfilled");
+        let title = msg.payload.event.reward.title;
+        if (title in twitch_connection_info.hotkey_bind_dict){
+          console.log("Appending");
+          lock.acquire(event_queue, function() {
+            event_queue.push(title);
+          }).then(function(){});
+          
+        }
+      }
+    }
+  }
+  
+}
+
+function ws_subscribe_topic(){
+  var request = require('request');
+  var data = {"type":"channel.channel_points_custom_reward_redemption.add",
+              "version":"1",
+              "condition":{"broadcaster_user_id":twitch_connection_info.user_id, "moderator_user_id":twitch_connection_info.user_id},
+              "transport":{"method": "websocket","session_id":twitch_connection_info.session_id}
+          };
+  var options = {
+    method: 'POST',
+    body: data,
+    json: true,
+    url: "https://api.twitch.tv/helix/eventsub/subscriptions",
+    headers: {'Authorization': 'Bearer '+twitch_connection_info.user_key,
+              'Client-Id': twitch_connection_info.app_id,
+              'Content-Type': "application/json"
+    }
+  };
+  function callback(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      console.log("%s", body);
+    }
+  }
+  request(options, callback);
+}
+
 function log_message(event, msg){
   console.log(msg);
 }
@@ -111,7 +176,7 @@ function read_data_from_file(){
   new_user_id = json_obj.user_id === undefined ? "" : json_obj.user_id;
   new_username = json_obj.username === undefined ? "" : json_obj.username;
   new_session_id = json_obj.session_id === undefined ? "" : json_obj.session_id;
-  new_subscription_type = json_obj.subscription_type === undefined ? "" : json_obj.subscription_type;
+  new_subscription_type = json_obj.subscription_type === undefined ? "channel.channel_points_custom_reward_redemption.add" : json_obj.subscription_type;
   new_reward_list = json_obj.reward_list === undefined ? [] : json_obj.reward_list;
   new_key_obtained_time = json_obj.key_obtained_time === undefined ? "" : json_obj.key_obtained_time;
   new_hotkey_bind_dict = json_obj.hotkey_bind_dict === undefined ? {} : json_obj.hotkey_bind_dict;
@@ -120,7 +185,7 @@ function read_data_from_file(){
                                                     new_username, new_session_id, new_subscription_type,
                                                     new_reward_list, new_key_obtained_time, new_hotkey_bind_dict,
                                                     new_hotkey_duration_dict);
-  console.log(json_obj);
+  //console.log(json_obj);
 }
 
 function send_hotkey_dicts(event, bind_dict, duration_dict){

@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     add_feed_label: (string) => ipcRenderer.on('add-feed-label', string),
     test_create_feed_label: () => ipcRenderer.send("test-create-feed-label"),
     save_wrapper: () => ipcRenderer.send("save-wrapper"),
+    start_listener: () => ipcRenderer.send("start-listener"),
 });
 
 contextBridge.exposeInMainWorld('versions', {

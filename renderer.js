@@ -18,6 +18,11 @@ test_btn.addEventListener('click', () => {
     window.electronAPI.test_create_feed_label();
 });
 
+const start_btn = document.getElementById('start_btn');
+start_btn.addEventListener('click', () => {
+    window.electronAPI.start_listener();
+});
+
 function get_timestamp(){
     var currentdate = new Date();
     var datestr = "["+((currentdate.getDate() < 10)?"0":"") + currentdate.getDate() + "/"
