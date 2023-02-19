@@ -99,6 +99,8 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
 function start_listener(){
   x="yo"
   event_queue.push('drimk');
+  let feed_message = "Started listener";
+  main_window.webContents.send("add-feed-label", feed_message);
   //press_key("e");
   const event_task = new Task('event_queue_manager', read_event_queue);
   const event_job = new SimpleIntervalJob({ seconds: 1, }, event_task);
@@ -116,6 +118,8 @@ function start_listener(){
 }
 
 function stop_listener(){
+  let feed_message = "Stopped listener";
+  main_window.webContents.send("add-feed-label", feed_message);
   scheduler.stop();
   ws.close();
 }
@@ -134,6 +138,8 @@ function press_key(key_name){
   // .sleep(100)
   // .release(key_name)
   // .go().then();//robot.stopJar);
+  let feed_message = "Pressed key: "+key_name;
+  main_window.webContents.send("add-feed-label", feed_message);
   robot.keyTap(key_name);
 }
 
@@ -147,12 +153,16 @@ function read_event_queue(){
         key_name = key_name.toLowerCase();
         let duration = parseInt(twitch_connection_info.hotkey_duration_dict[event_name]);
         event_expiry_time = duration <= 0 ? -1 : seconds + duration;
+        let feed_message = "Responding to event: "+event_name;
+        main_window.webContents.send("add-feed-label", feed_message);
         //console.log("PRESSING FOR EVENT " + key_name);
         press_key(key_name);
       }
     } else if (seconds >= event_expiry_time){
       console.log("RETURNING TO DEFAULT");
       let key_name = String(twitch_connection_info.default_bind).toLowerCase();
+      let feed_message = "Returning to default state";
+      main_window.webContents.send("add-feed-label", feed_message);
       press_key(key_name);
       event_expiry_time = -1;
     }
@@ -181,6 +191,8 @@ function ws_parse_message(msg){
         let title = msg.payload.event.reward.title;
         if (title in twitch_connection_info.hotkey_bind_dict){
           console.log("Appending");
+          let feed_message = "Reward redeemed: "+title;
+          main_window.webContents.send("add-feed-label", feed_message);
           lock.acquire(event_queue, function() {
             event_queue.push(title);
           }).then(function(){});

@@ -44,7 +44,7 @@ function get_timestamp(){
                 + ((currentdate.getMinutes() < 10)?"0":"") + currentdate.getMinutes() + ":" 
                 + ((currentdate.getSeconds() < 10)?"0":"") + currentdate.getSeconds() + " ";
 
-    var datetime = datestr+timestr;
+    var datetime = timestr+"       ";
     return datetime;
 }
 
@@ -53,13 +53,15 @@ window.electronAPI.add_feed_label((event, string) => {
     label.setAttribute("class", "feed_label");
     label.style.color = "#DDDDDD";
     label.style.fontFamily = "Arial, Helvetica, sans-serif";
+    label.style.fontSize = "small";
     label.innerHTML = string;
 
     timestamp_label = document.createElement("label");
     timestamp_label.setAttribute("class", "feed_label");
     timestamp_label.style.color = "#DDDDDD";
     timestamp_label.style.fontFamily = "Arial, Helvetica, sans-serif";
-    timestamp_label.style.fontSize = "x-small"
+    timestamp_label.style.fontSize = "x-small";
+    timestamp_label.style.padding = "0px 0px";
     timestamp_label.innerHTML = get_timestamp();
     feed_div.appendChild(timestamp_label);
     feed_div.appendChild(label);
