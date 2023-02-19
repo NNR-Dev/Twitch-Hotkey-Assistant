@@ -14,6 +14,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     test_create_feed_label: () => ipcRenderer.send("test-create-feed-label"),
     save_wrapper: () => ipcRenderer.send("save-wrapper"),
     start_listener: () => ipcRenderer.send("start-listener"),
+    stop_listener: () => ipcRenderer.send("stop-listener"),
 });
 
 contextBridge.exposeInMainWorld('versions', {

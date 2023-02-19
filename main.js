@@ -16,6 +16,8 @@ class TwitchConnectionInfo {
 var custom_rewards=[];
 var bindings_window;
 
+var event_expiry_time = -1;
+
 //var hotkey_bind_dict = {};
 //var hotkey_duration_dict = {};
 
@@ -25,16 +27,20 @@ var twitch_connection_info;// = new TwitchConnectionInfo(app_id="snbnlpo27abzy10
 //reward_list=null, key_obtained_time=null, hotkey_bind_dict = hotkey_bind_dict, hotkey_duration_dict = hotkey_duration_dict);
 var settings_window;
 var event_queue = [];
-
+var ws;
 const {app, BrowserWindow, ipcMain, dialog} = require('electron');
 const storage = require('electron-json-storage')
 const path = require('path');
+const robot = require('kbm-robot');
+//robot.startJar();
 const axios = require('axios');
 const { create } = require('domain');
 const { write, read } = require('fs');
 const WebSocket = require('ws');
 const request = require('request');
 const AsyncLock = require('async-lock');
+const { ToadScheduler, SimpleIntervalJob, Task } = require('toad-scheduler');
+const scheduler = new ToadScheduler()
 var lock = new AsyncLock();
 config_path = path.join(app.getAppPath(), 'User_Data');
 storage.setDataPath(config_path);
@@ -65,6 +71,7 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
     ipcMain.on("save-wrapper", save_wrapper);
     ipcMain.on("test-create-feed-label", test_create_feed_label);
     ipcMain.on("start-listener", start_listener);
+    ipcMain.on("stop-listener", stop_listener);
     main_window = createWindow("index.html");
     read_data_from_file();
     app.on('activate', () => {
@@ -77,21 +84,73 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
   
 
   app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit();
+    if (process.platform !== 'darwin') {
+      //robot.stopJar();
+      app.quit();
+    }
   });
 
 function start_listener(){
   x="yo"
-  lock.acquire(event_queue, function(title) {
-    event_queue.push(x);
-  }).then(console.log(event_queue));
-  let ws = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws');
+  event_queue.push('drimk');
+  //press_key("e");
+  const event_task = new Task('event_queue_manager', read_event_queue);
+  const event_job = new SimpleIntervalJob({ seconds: 1, }, event_task);
+  scheduler.addSimpleIntervalJob(event_job);
+  // lock.acquire(event_queue, function() {
+  //   event_queue.push(x);
+  // }).then(console.log(event_queue));
+  ws = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws');
   ws.onopen = function(){
     
   }
   ws.on('message', function message(data){
     ws_parse_message(data);
   });
+}
+
+function stop_listener(){
+  scheduler.stop();
+  ws.close();
+}
+
+function array_remove_by_val(array, item){
+  var index = array.indexOf(item);
+  if (index !== -1) {
+    array.splice(index, 1);
+  }
+  return array;
+}
+
+function press_key(key_name){
+  robot.startJar();
+  robot.press(key_name)
+  .sleep(100)
+  .release(key_name)
+  .go().then(robot.stopJar);
+}
+
+function read_event_queue(){
+  lock.acquire(event_queue, function() {
+    let seconds = (new Date().getTime())/1000;
+    if (event_expiry_time == -1){
+      if (event_queue.length > 0){
+        let event_name = event_queue.shift();
+        let key_name = String(twitch_connection_info.hotkey_bind_dict[event_name]);
+        key_name = key_name.toLowerCase();
+        let duration = parseInt(twitch_connection_info.hotkey_duration_dict[event_name]);
+        event_expiry_time = duration <= 0 ? -1 : seconds + duration;
+        //console.log("PRESSING FOR EVENT " + key_name);
+        press_key(key_name);
+      }
+    } else if (seconds >= event_expiry_time){
+      console.log("RETURNING TO DEFAULT");
+      let key_name = twitch_connection_info.default_bind;
+      press_key(key_name);
+      event_expiry_time = -1;
+    }
+  }).then();
+  
 }
 
 function ws_parse_message(msg){
@@ -118,7 +177,6 @@ function ws_parse_message(msg){
           lock.acquire(event_queue, function() {
             event_queue.push(title);
           }).then(function(){});
-          
         }
       }
     }

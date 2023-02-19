@@ -19,8 +19,18 @@ test_btn.addEventListener('click', () => {
 });
 
 const start_btn = document.getElementById('start_btn');
+const stop_btn = document.getElementById('stop_btn');
+stop_btn.style.display="none";
 start_btn.addEventListener('click', () => {
     window.electronAPI.start_listener();
+    start_btn.style.display="none";
+    stop_btn.style.display="inline";
+});
+
+stop_btn.addEventListener('click', () => {
+    window.electronAPI.stop_listener();
+    start_btn.style.display="inline";
+    stop_btn.style.display="none";
 });
 
 function get_timestamp(){

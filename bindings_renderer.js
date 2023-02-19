@@ -297,7 +297,7 @@ function load_binding_panels(){
             var reward_selecter = new_div.querySelector(".reward_selecter")
             change_selecter_value(key, reward_selecter);
             var duration_field = new_div.querySelector(".duration_field");
-            if (duration == "0"){
+            if (duration == "0" || duration == "-1"){
                 duration_field.value = "";
             } else {
                 duration_field.value = duration;
@@ -360,7 +360,7 @@ function get_binding_data(){
         window.electronAPI.log_message(selected_reward);
         let duration_field = node.querySelector(".duration_field");
         let bind_duration = duration_field.value;
-        bind_duration = isNumeric(bind_duration) ? bind_duration : 0;
+        bind_duration = isNumeric(bind_duration) ? bind_duration : -1;
         window.electronAPI.log_message(bind_duration);
         let bind_button = node.querySelector(".bind_button");
         let bind_key = bind_button.value;
