@@ -268,18 +268,23 @@ var keyboardMap = [
 
 var hotkey_bind_dict = {};
 var hotkey_duration_dict = {};
+var default_state_bind = "";
 
 document.addEventListener("keydown", listen_for_key);
 //rewards = await window.electronAPI.get_rewards()
 const scrollable_div = document.getElementById('scrollable');
 var bind_count = 0;
+
+const default_bind_btn = document.getElementById('default_bind_btn');
+
 window.electronAPI.get_rewards((event, value) => {
     rewards = value;
 })
 
-window.electronAPI.get_hotkey_dicts((event, bind_dict, duration_dict) => {
+window.electronAPI.get_hotkey_dicts((event, bind_dict, duration_dict, default_bind) => {
     hotkey_bind_dict = bind_dict;
     hotkey_duration_dict = duration_dict;
+    default_state_bind = default_bind;
     load_binding_panels();
 })
 
@@ -290,6 +295,8 @@ function isNumeric(value) {
 
 function load_binding_panels(){
     window.electronAPI.log_message("starting loading");
+    default_bind_btn.value = default_state_bind;
+    default_bind_btn.innerHTML = default_state_bind;
     for (const [key, values] of Object.entries(hotkey_bind_dict)){
         duration = hotkey_duration_dict[key];
         values.forEach(value => {        
@@ -352,6 +359,7 @@ function listen_for_key(e){
 function get_binding_data(){
     hotkey_bind_dict = {}
     hotkey_duration_dict = {}
+    default_state_bind = default_bind_btn.value;
     let divs = document.querySelectorAll(".bind_div");
     window.electronAPI.log_message(divs.length);
     for (let node of divs){
@@ -374,7 +382,7 @@ function get_binding_data(){
             hotkey_bind_dict[selected_reward] = bind_list;
         }
     }
-    window.electronAPI.send_hotkey_dicts(hotkey_bind_dict, hotkey_duration_dict);
+    window.electronAPI.send_hotkey_dicts(hotkey_bind_dict, hotkey_duration_dict, default_state_bind);
 }
 
 function create_binding_panel(){
@@ -405,8 +413,8 @@ function create_binding_panel(){
     let bind_button_id = "bind_btn_"+bind_count;
     window.electronAPI.log_message(bind_button_id);
     bind_count++;
-    bind_button.setAttribute("id", bind_button_id);
-    bind_button.setAttribute("keydown", "myKeyPress(event)");
+    //bind_button.setAttribute("id", bind_button_id);
+    //bind_button.setAttribute("keydown", "myKeyPress(event)");
     new_div.appendChild(bind_button);
 
     scrollable_div.appendChild(new_div);

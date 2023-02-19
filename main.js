@@ -1,5 +1,5 @@
 class TwitchConnectionInfo {
-  constructor(app_id, user_key, user_id, username, session_id, subscription_type, reward_list, key_obtained_time, hotkey_bind_dict, hotkey_duration_dict){
+  constructor(app_id, user_key, user_id, username, session_id, subscription_type, reward_list, key_obtained_time, hotkey_bind_dict, hotkey_duration_dict, default_bind){
     this.app_id = app_id;
     this.user_key = user_key;
     this.user_id = user_id;
@@ -10,6 +10,7 @@ class TwitchConnectionInfo {
     this.key_obtained_time = key_obtained_time;
     this.hotkey_bind_dict = hotkey_bind_dict;
     this.hotkey_duration_dict = hotkey_duration_dict;
+    this.default_bind = default_bind;
   }
 }
 
@@ -31,8 +32,8 @@ var ws;
 const {app, BrowserWindow, ipcMain, dialog} = require('electron');
 const storage = require('electron-json-storage')
 const path = require('path');
-const robot = require('kbm-robot');
-//robot.startJar();
+const robot = require('robotjs');
+//////var proc = robot.startJar();
 const axios = require('axios');
 const { create } = require('domain');
 const { write, read } = require('fs');
@@ -84,8 +85,13 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
   
 
   app.on('window-all-closed', () => {
+    try {
+      // robot.stopJar();
+      // proc.kill();
+    } catch (error) {
+      
+    }
     if (process.platform !== 'darwin') {
-      //robot.stopJar();
       app.quit();
     }
   });
@@ -123,11 +129,12 @@ function array_remove_by_val(array, item){
 }
 
 function press_key(key_name){
-  robot.startJar();
-  robot.press(key_name)
-  .sleep(100)
-  .release(key_name)
-  .go().then(robot.stopJar);
+  //robot.startJar();
+  // robot.press(key_name)
+  // .sleep(100)
+  // .release(key_name)
+  // .go().then();//robot.stopJar);
+  robot.keyTap(key_name);
 }
 
 function read_event_queue(){
@@ -145,7 +152,7 @@ function read_event_queue(){
       }
     } else if (seconds >= event_expiry_time){
       console.log("RETURNING TO DEFAULT");
-      let key_name = twitch_connection_info.default_bind;
+      let key_name = String(twitch_connection_info.default_bind).toLowerCase();
       press_key(key_name);
       event_expiry_time = -1;
     }
@@ -239,19 +246,21 @@ function read_data_from_file(){
   new_key_obtained_time = json_obj.key_obtained_time === undefined ? "" : json_obj.key_obtained_time;
   new_hotkey_bind_dict = json_obj.hotkey_bind_dict === undefined ? {} : json_obj.hotkey_bind_dict;
   new_hotkey_duration_dict = json_obj.hotkey_duration_dict === undefined ? {} : json_obj.hotkey_duration_dict;
+  new_default_bind = json_obj.default_bind == undefined ? "" : json_obj.default_bind;
   twitch_connection_info = new TwitchConnectionInfo(new_app_id, new_user_key, new_user_id, 
                                                     new_username, new_session_id, new_subscription_type,
                                                     new_reward_list, new_key_obtained_time, new_hotkey_bind_dict,
-                                                    new_hotkey_duration_dict);
+                                                    new_hotkey_duration_dict, new_default_bind);
   //console.log(json_obj);
 }
 
-function send_hotkey_dicts(event, bind_dict, duration_dict){
+function send_hotkey_dicts(event, bind_dict, duration_dict, default_bind){
   console.log("Doing binding!");
   console.log(bind_dict);
   console.log(duration_dict);
   twitch_connection_info.hotkey_bind_dict = bind_dict;
   twitch_connection_info.hotkey_duration_dict = duration_dict;
+  twitch_connection_info.default_bind = default_bind;
   bindings_window.close();
 }
 
@@ -390,7 +399,7 @@ function get_key(key){
 function get_dicts(){
   console.log("sending data back over!");
   bindings_window.webContents.on('did-finish-load', function() {
-    bindings_window.webContents.send('get-hotkey-dicts', twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict);
+    bindings_window.webContents.send('get-hotkey-dicts', twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict, twitch_connection_info.default_bind);
   });
 }
 
