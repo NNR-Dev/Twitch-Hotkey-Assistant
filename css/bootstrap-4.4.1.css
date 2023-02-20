@@ -67,10 +67,16 @@ body {
   outline: 0 !important;
 }
 
+.vertical-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 div.bind_scroll {
   margin:4px, 4px;
   padding:4px;
-  height:400px;
+  height:380px;
   overflow-x: hidden;
   overflow-y: auto;
   text-align:justify;
@@ -80,6 +86,17 @@ div.bind_scroll {
   display:inline;
   padding-top: 0px;
   padding-bottom: 0px;
+}
+
+.block_btn {
+  display:inline-flex;
+  align-items: center;
+}
+
+.block_lbl {
+  display:block;
+  text-align: center;
+  margin-bottom: 1px;
 }
 
 div.feed_scroll {

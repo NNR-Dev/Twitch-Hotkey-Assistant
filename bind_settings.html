@@ -9,12 +9,21 @@
     <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
   </head>
   <body tabindex="-1" class="bg-dark" id="body">
-    <div class="container text-white bg-dark p-4">
-		<div style="margin-bottom:0.3cm;">
-			<button type="button" onclick="create_binding_panel()" id="add_hotkey_btn">Add New Hotkey</button>
-			<button type="button" class="bind_button" value="key_empty" id="default_bind_btn">Click to Rebind</button>
+    <div class="container text-white bg-dark">
+		<div style="margin-bottom:0.3cm;height=80px;display:block;">
+			<div class="vertical-center" style="float:left;margin-right:4px;height:80px;text-align:center;">
+				<button type="button" onclick="create_binding_panel()" class="top_btn " id="add_hotkey_btn">Add New Hotkey</button>
+			</div>
+			<div style="float:left;height:70px">
+				<label class="block_lbl">Default Hotkey</label>
+				<button type="button" class="bind_button" value="key_empty" id="default_bind_btn">Click to Rebind</button>
+			</div>
 		</div>
-		<div class="bind_scroll bg_dark" id="scrollable" style="margin-bottom:1cm;">
+		<br>
+		<br>
+		<br>
+		<br>
+		<div class="bind_scroll bg_dark" id="scrollable" style="margin-bottom:1cm;display:block;">
 			
 		<!--<div>
 			<select id="reward_selecter">
