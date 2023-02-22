@@ -13,25 +13,26 @@ save_btn.addEventListener('click', () => {
     window.electronAPI.save_wrapper();
 });
 
-const test_btn = document.getElementById('test_add_text_btn');
-test_btn.addEventListener('click', () => {
-    window.electronAPI.test_create_feed_label();
-});
+// // // const test_btn = document.getElementById('test_add_text_btn');
+// // // test_btn.addEventListener('click', () => {
+// // //     window.electronAPI.test_create_feed_label();
+// // // });
 
 const start_btn = document.getElementById('start_btn');
 const stop_btn = document.getElementById('stop_btn');
 stop_btn.style.display="none";
+
 start_btn.addEventListener('click', () => {
     window.electronAPI.start_listener();
     start_btn.style.display="none";
     stop_btn.style.display="inline";
 });
 
-// // // stop_btn.addEventListener('click', () => {
-// // //     window.electronAPI.stop_listener();
-// // //     start_btn.style.display="inline";
-// // //     stop_btn.style.display="none";
-// // // });
+stop_btn.addEventListener('click', () => {
+    window.electronAPI.stop_listener();
+    start_btn.style.display="inline";
+    stop_btn.style.display="none";
+});
 
 function get_timestamp(){
     var currentdate = new Date();
