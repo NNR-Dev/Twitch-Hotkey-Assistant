@@ -273,7 +273,7 @@ var default_state_bind = "";
 document.addEventListener("keydown", listen_for_key);
 //rewards = await window.electronAPI.get_rewards()
 const scrollable_div = document.getElementById('scrollable');
-var bind_count = 0;
+//var bind_count = 0;
 
 const default_bind_btn = document.getElementById('default_bind_btn');
 
@@ -333,7 +333,7 @@ function change_selecter_value(value, select){
 
 function listen_for_key(e){
     window.electronAPI.log_message(e.target.className);
-    if (e.target.className === 'bind_button'){
+    if (e.target.className === 'bind_button centered'){
         var keynum;
         //window.electronAPI.log_message("bababababababababa");
         e.preventDefault();
@@ -388,11 +388,17 @@ function get_binding_data(){
 function create_binding_panel(){
     //window.electronAPI.log_message(rewards);
     var new_div = document.createElement("div");
-    new_div.setAttribute("class", "bind_div");
-    new_div.setAttribute("style", "margin-bottom:0.2cm;")
-
+    new_div.setAttribute("class", "bind_div center_div");
+    new_div.setAttribute("style", "margin-bottom:0.1cm;")
+    new_div.style.backgroundColor = "#57616B";
+    new_div.style.borderRadius = "4px";
+    new_div.style.height = "40px";
+    new_div.style.width = "480px";
     let selecter = document.createElement("select");
-    selecter.setAttribute("class", "reward_selecter");
+    selecter.style.width = "150px";
+    selecter.setAttribute("class", "reward_selecter centered");
+    selecter.style.marginRight = "5px";
+    selecter.style.marginLeft = "5px";
     //selecter.setAttribute("width", 300);
     new_div.appendChild(selecter);
     rewards.forEach(element => {
@@ -402,20 +408,55 @@ function create_binding_panel(){
         selecter.appendChild(temp_option);
     });
     let duration_field = document.createElement("input");
+    duration_field.style.width = "80px";
     duration_field.setAttribute("type", "text");
-    duration_field.setAttribute("class", "duration_field");
+    duration_field.setAttribute("class", "duration_field centered");
+    duration_field.style.marginRight = "5px";
+    duration_field.style.marginLeft = "5px";
     new_div.appendChild(duration_field);
 
     let bind_button = document.createElement("button");
-    bind_button.setAttribute("class", "bind_button");
+    bind_button.setAttribute("class", "bind_button centered");
     bind_button.innerHTML ="Click to Bind";
     bind_button.setAttribute("value", "key_empty");
-    let bind_button_id = "bind_btn_"+bind_count;
-    window.electronAPI.log_message(bind_button_id);
-    bind_count++;
+    bind_button.style.width = "110px";
+    //let bind_button_id = "bind_btn_"+bind_count;
+    //window.electronAPI.log_message(bind_button_id);
+    bind_button.style.marginRight = "5px";
+    bind_button.style.marginLeft = "5px";
+
+    //bind_count++;
+    duration_field.style.marginRight = "5px";
+    new_div.appendChild(bind_button);
+    let delete_btn = document.createElement("INPUT");
+    delete_btn.setAttribute("type", "image");
+    delete_btn.setAttribute("class", "delete_btn centered");
+
+    delete_btn.src = "images/feather/trash.svg";
+    delete_btn.style.float = "right";
+
+    delete_btn.addEventListener('click', () =>{
+        window.electronAPI.log_message("clicked");
+        let selecter = new_div.querySelector(".reward_selecter");
+        window.electronAPI.log_message("selecter");
+        let selected_reward = selecter.value;
+        window.electronAPI.log_message("selected reward: "+selected_reward);
+        delete hotkey_bind_dict[selected_reward];
+        window.electronAPI.log_message("removed bind");
+        delete hotkey_duration_dict[selected_reward];
+        delete_btn.parentElement.remove();
+    });
+    delete_btn.addEventListener('mouseleave', () => {
+        delete_btn.src = "images/feather/trash.svg";
+    });
+    delete_btn.addEventListener('mouseover', () => {
+        delete_btn.src = "images/feather/trash-2.svg";
+    });
+    delete_btn.style.marginRight = "5px";
+    new_div.appendChild(delete_btn);
     //bind_button.setAttribute("id", bind_button_id);
     //bind_button.setAttribute("keydown", "myKeyPress(event)");
-    new_div.appendChild(bind_button);
+    
 
     scrollable_div.appendChild(new_div);
     return new_div;

@@ -73,7 +73,8 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
     ipcMain.on("test-create-feed-label", test_create_feed_label);
     ipcMain.on("start-listener", start_listener);
     ipcMain.on("stop-listener", stop_listener);
-    main_window = createWindow("index.html");
+    main_window = createWindow("index.html", width = 600, height = 400,);
+    main_window.setMenu(null);
     read_data_from_file();
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) {
@@ -347,8 +348,8 @@ function retrieve_user_id(){
 async function create_bindings_window(){
   let success = await retrieve_channel_point_rewards();
   if (success){
-    bindings_window = createWindow("bind_settings.html", 400, 600, false);
-    bindings_window.setMenu(null);
+    bindings_window = createWindow("bind_settings.html", 600, 600, false);
+    //bindings_window.setMenu(null);
     get_custom_rewards();
     get_dicts(twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict);
     

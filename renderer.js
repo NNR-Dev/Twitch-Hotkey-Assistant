@@ -27,11 +27,11 @@ start_btn.addEventListener('click', () => {
     stop_btn.style.display="inline";
 });
 
-stop_btn.addEventListener('click', () => {
-    window.electronAPI.stop_listener();
-    start_btn.style.display="inline";
-    stop_btn.style.display="none";
-});
+// // // stop_btn.addEventListener('click', () => {
+// // //     window.electronAPI.stop_listener();
+// // //     start_btn.style.display="inline";
+// // //     stop_btn.style.display="none";
+// // // });
 
 function get_timestamp(){
     var currentdate = new Date();
@@ -49,6 +49,10 @@ function get_timestamp(){
 }
 
 window.electronAPI.add_feed_label((event, string) => {
+    let scroll_to_bottom = false;
+    if (feed_div.scrollTop === (feed_div.scrollHeight - feed_div.offsetHeight)){
+        scroll_to_bottom = true;
+    }
     let label = document.createElement("label");
     label.setAttribute("class", "feed_label");
     label.style.color = "#DDDDDD";
@@ -67,4 +71,9 @@ window.electronAPI.add_feed_label((event, string) => {
     feed_div.appendChild(label);
     let br = document.createElement("br");
     feed_div.appendChild(br);
+    
+    //var elem = document.getElementById('data');
+    if (scroll_to_bottom){
+        feed_div.scrollTop = feed_div.scrollHeight;
+    }
 })

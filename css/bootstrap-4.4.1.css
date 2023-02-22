@@ -73,10 +73,30 @@ body {
   justify-content: center;
 }
 
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
 div.bind_scroll {
   margin:4px, 4px;
   padding:4px;
-  height:380px;
+  height:320px;
   overflow-x: hidden;
   overflow-y: auto;
   text-align:justify;
@@ -86,6 +106,14 @@ div.bind_scroll {
   display:inline;
   padding-top: 0px;
   padding-bottom: 0px;
+}
+
+.delete_btn {
+  padding: 0;
+  border: none;
+  background: none;
+  -webkit-user-select: auto;
+  -webkit-app-region: no-drag;
 }
 
 .block_btn {
@@ -103,12 +131,17 @@ div.feed_scroll {
   margin-top: 6px;
   margin-bottom: 6px;
   padding:10px;
-  height:400px;
+  height:270px;
   overflow-x: hidden;
   overflow-y: auto;
   text-align:justify;
-  background-color: #57616B;
   border-radius: 10px;
+}
+
+.centered {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 hr {
@@ -470,6 +503,28 @@ small,
 .small {
   font-size: 80%;
   font-weight: 400;
+}
+
+.vsmall {
+  font-size: 80%;
+  font-weight: 400;
+}
+
+.round_btn {
+  border-radius: 4px;
+  background-color: #2B2B2D;
+  font-family: "Inter", "Roobert", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #EFEFF1;
+  border: 0;
+  box-shadow: none;
+  text-align: center;
+  height: 30px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.right_btn {
+  float: right;
 }
 
 mark,
@@ -6808,6 +6863,18 @@ button.bg-light:focus {
 
 .bg-dark {
   background-color: #343a40 !important;
+}
+
+.bg-med-twitch{
+  background-color: #57616B;
+}
+
+.bg-dark-twitch {
+  background-color: #18181B;
+}
+
+.bg-vdark-twitch {
+  background-color: #0E0E10;
 }
 
 a.bg-dark:hover, a.bg-dark:focus,

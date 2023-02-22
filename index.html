@@ -14,15 +14,19 @@
 	  <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
     <title>Hello from Electron renderer!</title>
   </head>
-  <body tabindex="-1" class="bg-dark">
-	 <div class="container text-white bg-dark p-4">
-		<button id="settings_btn" type="button">User Config</button>
-		<button id="bindings_btn" type="button">Hotkey Config</button>
-		<button id="save_btn" type="button">Save Config Settings</button>
-		<button id="test_add_text_btn" type="button">Add text</button>
-		<div class="feed_scroll" id="text_feed"></div>
-	<button id="start_btn" type="button">Start Listener</button>
-	<button id="stop_btn" type="button">Stop Listener</button>
+  <body tabindex="-1" class="bg-dark-twitch">
+	 <div class="container text-white bg-dark-twitch p-4" style="overflow: hidden;">
+	 	<button class="round_btn" id="settings_btn" type="button">User Config</button>
+		<button class="round_btn" id="bindings_btn" type="button">Hotkey Config</button>
+		<button class="round_btn" id="save_btn" type="button">Save Config Settings</button>
+		<button class="round_btn right_btn" id="start_btn" type="button">Start Listener</button>
+		<!--<button class="round_btn right_btn" id="stop_btn" type="button">Stop Listener</button>-->
+		
+		
+		
+		<button class="round_btn" id="test_add_text_btn" type="button">Add text</button>
+		<div class="feed_scroll bg-med-twitch" id="text_feed"></div>
+	
 	</div>
 	  
   </body>
