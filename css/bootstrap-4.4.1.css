@@ -94,21 +94,37 @@ body {
 }
 
 div.bind_scroll {
-  margin:4px, 4px;
-  padding:4px;
-  height:320px;
+  margin: 4px, 4px;
+  padding: 4px;
+  height: 170px;
   overflow-x: hidden;
   overflow-y: auto;
-  text-align:justify;
+  text-align: justify;
 }
 
-.feed_label{
+select.twitch{
+  border-radius: 4px;
+  background-color: #2B2B2D;
+  font-family: "Inter", "Roobert", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #EFEFF1;
+  
+}
+
+input.twitch{
+  border-radius: 4px;
+  background-color: #3E3E40;
+  font-family: "Inter", "Roobert", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #EFEFF1;
+}
+
+
+label.feed_label{
   display:inline;
   padding-top: 0px;
   padding-bottom: 0px;
 }
 
-.delete_btn {
+button.delete_btn {
   padding: 0;
   border: none;
   background: none;
@@ -116,7 +132,7 @@ div.bind_scroll {
   -webkit-app-region: no-drag;
 }
 
-.block_btn {
+buttonblock_btn {
   display:inline-flex;
   align-items: center;
 }
@@ -125,6 +141,7 @@ div.bind_scroll {
   display:block;
   text-align: center;
   margin-bottom: 1px;
+  margin-left:8px;
 }
 
 div.feed_scroll {
@@ -510,7 +527,7 @@ small,
   font-weight: 400;
 }
 
-.round_btn {
+button.round_btn {
   border-radius: 4px;
   background-color: #2B2B2D;
   font-family: "Inter", "Roobert", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -519,6 +536,13 @@ small,
   box-shadow: none;
   text-align: center;
   height: 30px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.twitch_lbl {
+  font-family: "Inter", "Roobert", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #EFEFF1;
   font-size: 13px;
   font-weight: 600;
 }

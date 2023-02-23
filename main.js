@@ -348,8 +348,8 @@ function retrieve_user_id(){
 async function create_bindings_window(){
   let success = await retrieve_channel_point_rewards();
   if (success){
-    bindings_window = createWindow("bind_settings.html", 600, 600, false);
-    //bindings_window.setMenu(null);
+    bindings_window = createWindow("bind_settings.html", 560, 400, false);
+    bindings_window.setMenu(null);
     get_custom_rewards();
     get_dicts(twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict);
     

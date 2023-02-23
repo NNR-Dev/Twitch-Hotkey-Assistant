@@ -8,29 +8,27 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
   </head>
-  <body tabindex="-1" class="bg-dark" id="body">
-    <div class="container text-white bg-dark">
-		<div style="margin-bottom:0.3cm;height=80px;display:block;">
-			<div class="vertical-center" style="float:left;margin-right:4px;height:80px;text-align:center;">
-				<button type="button" onclick="create_binding_panel()" class="top_btn " id="add_hotkey_btn">Add New Hotkey</button>
+  <body tabindex="-1" class="bg-dark-twitch" id="body">
+    <div class="container text-white bg-dark-twitch">
+		<div style="margin-bottom:0.3cm;height=50px;display:block;">
+			<div style="float:left;margin-right:4px;height:40px;width:120px;position:relative;">
+				<button type="button" onclick="create_binding_panel()" class="top_btn round_btn" id="add_hotkey_btn" style="width:120px; position:absolute;top:62%;">Add New Hotkey</button>
 			</div>
-			<div style="float:left;height:70px">
-				<label class="block_lbl">Default Hotkey</label>
-				<button type="button" class="bind_button" value="key_empty" id="default_bind_btn" style="width:110px;">Click to Bind</button>
+			<div style="float:left;height:40px; position:relative;">
+				<label class="block_lbl twitch_lbl">Default Hotkey</label>
+				<button type="button" class="bind_button round_btn" value="key_empty" id="default_bind_btn" style="width:110px; position:absolute; top:62%;">Click to Bind</button>
 			</div>
 		</div>
 		<br>
 		<br>
-		<br>
-		
 		<br>
 		<div style="float:left;height:20px">
-			<label style="width:150px; margin-right:5px; margin-left:5px; text-align:center;">Hotkey Trigger</label>
-			<label style="width:80px; margin-right:5px; margin-left:2px; text-align:center;">Duration</label>
-			<label style="width:110px; margin-right:5px; margin-left:2px; text-align:center;">Keybind</label>
+			<label class="twitch_lbl" style="width:150px; margin-right:5px; margin-left:5px; text-align:center;">Hotkey Trigger</label>
+			<label class="twitch_lbl" style="width:80px; margin-right:5px; margin-left:2px; text-align:center;">Duration</label>
+			<label class="twitch_lbl" style="width:110px; margin-right:5px; margin-left:2px; text-align:center;">Keybind</label>
 		</div>
 		<br>
-		<div class="bind_scroll bg_dark" id="scrollable" style="margin-bottom:1cm;display:block;">
+		<div class="bind_scroll bg-dark-twitch" id="scrollable" style="margin-bottom:1cm;display:block;">
 			
 		<!--<div>
 			<select id="reward_selecter">
@@ -44,7 +42,7 @@
 		</div>-->
 		</div>
 		<div>
-		  <button type="button" id="save_bind_button" onclick="get_binding_data()">Save hotkeys</button>
+		  <button type="button" id="save_bind_button" onclick="get_binding_data()" class="round_btn">Save hotkeys</button>
     	</div>
     </div>
 	  

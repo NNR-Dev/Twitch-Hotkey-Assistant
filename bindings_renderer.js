@@ -333,7 +333,8 @@ function change_selecter_value(value, select){
 
 function listen_for_key(e){
     window.electronAPI.log_message(e.target.className);
-    if (e.target.className === 'bind_button centered'){
+    let className = e.target.className
+    if (className.includes('bind_button')){
         var keynum;
         //window.electronAPI.log_message("bababababababababa");
         e.preventDefault();
@@ -396,7 +397,8 @@ function create_binding_panel(){
     new_div.style.width = "480px";
     let selecter = document.createElement("select");
     selecter.style.width = "150px";
-    selecter.setAttribute("class", "reward_selecter centered");
+    selecter.style.height= "30px";
+    selecter.setAttribute("class", "reward_selecter centered twitch");
     selecter.style.marginRight = "5px";
     selecter.style.marginLeft = "5px";
     //selecter.setAttribute("width", 300);
@@ -410,13 +412,13 @@ function create_binding_panel(){
     let duration_field = document.createElement("input");
     duration_field.style.width = "80px";
     duration_field.setAttribute("type", "text");
-    duration_field.setAttribute("class", "duration_field centered");
+    duration_field.setAttribute("class", "duration_field centered twitch");
     duration_field.style.marginRight = "5px";
     duration_field.style.marginLeft = "5px";
     new_div.appendChild(duration_field);
 
     let bind_button = document.createElement("button");
-    bind_button.setAttribute("class", "bind_button centered");
+    bind_button.setAttribute("class", "bind_button round_btn centered");
     bind_button.innerHTML ="Click to Bind";
     bind_button.setAttribute("value", "key_empty");
     bind_button.style.width = "110px";
