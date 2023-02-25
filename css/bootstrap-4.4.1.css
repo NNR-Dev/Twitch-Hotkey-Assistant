@@ -4369,15 +4369,17 @@ input[type="button"].btn-block {
 
 .nav-link {
   display: block;
+  color: #CFCFD1;
   padding: 0.5rem 1rem;
 }
 
 .nav-link:hover, .nav-link:focus {
   text-decoration: none;
+  color: #FFFFFF;
 }
 
 .nav-link.disabled {
-  color: #6c757d;
+  color: #4c555d;
   pointer-events: none;
   cursor: default;
 }
