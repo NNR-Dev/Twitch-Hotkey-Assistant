@@ -55,6 +55,7 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
       },
       title: title,
       resizable: is_resizable,
+      icon: "images/logo1.ico",
     });
     windows.add(win);
   
@@ -76,7 +77,7 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     ipcMain.on("stop-listener", stop_listener);
     ipcMain.on("open-settings-window", open_settings_window);
     ipcMain.on("close-window", close_window);
-    main_window = createWindow("index.html", width = 600, height = 455, title="Twitch Hotkey Assistant");
+    main_window = createWindow("index.html", width = 600, height = 455, is_resizable=false, title="Twitch Hotkey Assistant");
     main_window.setMenu(null);
     read_data_from_file();
     app.on('activate', () => {
