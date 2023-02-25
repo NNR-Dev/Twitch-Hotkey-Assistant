@@ -125,8 +125,19 @@ function start_listener(){
 function stop_listener(){
   let feed_message = "Stopped listener";
   main_window.webContents.send("add-feed-label", feed_message);
-  scheduler.stop();
-  ws.close();
+  try {
+    scheduler.stop();
+    if (ws.readyState !== WebSocket.OPEN){
+      ws.addEventListener('open', () => {
+        ws.close();
+      });
+    } else {
+      ws.close();
+    }
+  } catch (error) {
+    
+  }
+  
 }
 
 function array_remove_by_val(array, item){

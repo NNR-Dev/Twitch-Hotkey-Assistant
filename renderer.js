@@ -9,10 +9,10 @@ set_button.addEventListener('mouseover', () => {
     set_button.src = "images/feather/settings-white.svg";
 });
 
-const exit_btn = document.getElementById('exit_btn');
-exit_btn.addEventListener('click', () => {
-    window.electronAPI.close_window();
-})
+// const exit_btn = document.getElementById('exit_btn');
+// exit_btn.addEventListener('click', () => {
+//     window.electronAPI.close_window();
+// })
 // // const binding_button = document.getElementById('bindings_btn');
 // // binding_button.addEventListener('click', () => {
 // //     window.electronAPI.create_bindings_window();
