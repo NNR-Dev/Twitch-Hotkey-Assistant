@@ -50,6 +50,9 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     const win = new BrowserWindow({
       width: width,
       height: height,
+      'minHeight': height,
+      'minWidth': width,
+      'maxWidth': width,
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
       },
@@ -77,7 +80,7 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     ipcMain.on("stop-listener", stop_listener);
     ipcMain.on("open-settings-window", open_settings_window);
     ipcMain.on("close-window", close_window);
-    main_window = createWindow("index.html", width = 600, height = 455, is_resizable=false, title="Twitch Hotkey Assistant");
+    main_window = createWindow("index.html", width = 600, height = 455, is_resizable=true, title="Twitch Hotkey Assistant");
     main_window.setMenu(null);
     read_data_from_file();
     app.on('activate', () => {
@@ -430,7 +433,7 @@ function open_settings_window(){
 }
 
 function create_settings_window(){
-  settings_window = createWindow("settings.html", 560, 460, false, "Settings");
+  settings_window = createWindow("settings.html", 560, 460, true, "Settings");
   settings_window.setMenu(null)
   open_settings_window();
 }

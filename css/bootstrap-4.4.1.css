@@ -152,7 +152,8 @@ div.feed_scroll {
   margin-top: 6px;
   margin-bottom: 6px;
   padding:10px;
-  height:270px;
+  height: calc(100% - 85px - 20px);
+  /* height:270px; */
   overflow-x: hidden;
   overflow-y: auto;
   text-align:justify;
