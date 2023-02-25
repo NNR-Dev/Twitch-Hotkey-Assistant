@@ -46,13 +46,14 @@ var lock = new AsyncLock();
 config_path = path.join(app.getAppPath(), 'User_Data');
 storage.setDataPath(config_path);
 
-const createWindow = (html_path, width = 800, height = 600, is_resizable = true) => {
+const createWindow = (html_path, width = 800, height = 600, is_resizable = true, title="") => {
     const win = new BrowserWindow({
       width: width,
       height: height,
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
       },
+      title: title,
       resizable: is_resizable,
     });
     windows.add(win);
@@ -73,7 +74,9 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true)
     ipcMain.on("test-create-feed-label", test_create_feed_label);
     ipcMain.on("start-listener", start_listener);
     ipcMain.on("stop-listener", stop_listener);
-    main_window = createWindow("index.html", width = 600, height = 400,);
+    ipcMain.on("open-settings-window", open_settings_window);
+    ipcMain.on("close-window", close_window);
+    main_window = createWindow("index.html", width = 600, height = 455, title="Twitch Hotkey Assistant");
     main_window.setMenu(null);
     read_data_from_file();
     app.on('activate', () => {
@@ -267,6 +270,15 @@ function read_data_from_file(){
   //console.log(json_obj);
 }
 
+function close_window(){
+  try {
+    stop_listener();
+  } catch (error) {
+    
+  }
+  main_window.close();
+}
+
 function send_hotkey_dicts(event, bind_dict, duration_dict, default_bind){
   console.log("Doing binding!");
   console.log(bind_dict);
@@ -274,7 +286,8 @@ function send_hotkey_dicts(event, bind_dict, duration_dict, default_bind){
   twitch_connection_info.hotkey_bind_dict = bind_dict;
   twitch_connection_info.hotkey_duration_dict = duration_dict;
   twitch_connection_info.default_bind = default_bind;
-  bindings_window.close();
+  write_data_to_file(twitch_connection_info);
+  //bindings_window.close();
 }
 
 function check_user_token_expiry(){
@@ -310,7 +323,8 @@ async function save_auth_settings(event, user_key){
   if (token_res){
     token_res = await retrieve_user_id();
     if (token_res){
-        settings_window.close();
+        write_data_to_file(twitch_connection_info);
+        //settings_window.close();
     }
   }
   
@@ -348,10 +362,11 @@ function retrieve_user_id(){
 async function create_bindings_window(){
   let success = await retrieve_channel_point_rewards();
   if (success){
-    bindings_window = createWindow("bind_settings.html", 560, 400, false);
-    bindings_window.setMenu(null);
-    get_custom_rewards();
-    get_dicts(twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict);
+    console.log(custom_rewards);
+    bindings_window = settings_window;//createWindow("bind_settings.html", 560, 400, false);
+    //bindings_window.setMenu(null);
+    get_custom_rewards(bindings_window);
+    get_dicts(bindings_window); //twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict);
     
   }
   
@@ -391,16 +406,21 @@ async function retrieve_channel_point_rewards(){
 function create_auth_window(){
   var redirect_url = "https://okactuallyrob.github.io/Twitch-Authenticator/";
   var auth_url = "https://id.twitch.tv/oauth2/authorize?client_id=" + twitch_connection_info.app_id + "&redirect_uri="+encodeURIComponent(redirect_url) + "&response_type=token&scope=channel:read:redemptions";
-  w = createWindow("index.html");
+  w = createWindow("index.html", title="Authentication Window");
+  w.setMenu(null);
   w.loadURL(auth_url);
 }
 
-function create_settings_window(){
-  settings_window = createWindow("settings.html", 400, 172, false);
-  settings_window.setMenu(null)
+function open_settings_window(){
   if (twitch_connection_info.user_key !== ""){
     get_key(twitch_connection_info.user_key);
   }
+}
+
+function create_settings_window(){
+  settings_window = createWindow("settings.html", 560, 460, false, "Settings");
+  settings_window.setMenu(null)
+  open_settings_window();
 }
 
 function get_key(key){
@@ -409,19 +429,19 @@ function get_key(key){
   });
 }
 
-function get_dicts(){
+function get_dicts(b_window){
   console.log("sending data back over!");
-  bindings_window.webContents.on('did-finish-load', function() {
-    bindings_window.webContents.send('get-hotkey-dicts', twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict, twitch_connection_info.default_bind);
-  });
+  //b_window.webContents.on('did-finish-load', function() {
+    b_window.webContents.send('get-hotkey-dicts', twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict, twitch_connection_info.default_bind);
+  //});
 }
 
 
-function get_custom_rewards(){
+function get_custom_rewards(b_window){
   //console.log(custom_rewards);
   //console.log(bindings_window);
-  bindings_window.webContents.on('did-finish-load', function() {
-    bindings_window.webContents.send('custom-rewards', custom_rewards);
-  });
+  //b_window.webContents.on('did-finish-load', function() {
+    b_window.webContents.send('custom-rewards', custom_rewards);
+  //});
   //console.log("sent");
 }

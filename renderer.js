@@ -1,17 +1,29 @@
-const set_button = document.getElementById('settings_btn')
+const set_button = document.getElementById('settings_btn');
 set_button.addEventListener('click', () => {
     window.electronAPI.create_settings_window();
 });
-const binding_button = document.getElementById('bindings_btn');
-binding_button.addEventListener('click', () => {
-    window.electronAPI.create_bindings_window();
+set_button.addEventListener('mouseleave', () => {
+    set_button.src = "images/feather/settings-grey.svg";
 });
-const save_btn = document.getElementById('save_btn');
+set_button.addEventListener('mouseover', () => {
+    set_button.src = "images/feather/settings-white.svg";
+});
+
+const exit_btn = document.getElementById('exit_btn');
+exit_btn.addEventListener('click', () => {
+    window.electronAPI.close_window();
+})
+// // const binding_button = document.getElementById('bindings_btn');
+// // binding_button.addEventListener('click', () => {
+// //     window.electronAPI.create_bindings_window();
+// // });
+
 const feed_div = document.getElementById('text_feed');
 
-save_btn.addEventListener('click', () => {
-    window.electronAPI.save_wrapper();
-});
+// // const save_btn = document.getElementById('save_btn');
+// // save_btn.addEventListener('click', () => {
+// //     window.electronAPI.save_wrapper();
+// // });
 
 // // // const test_btn = document.getElementById('test_add_text_btn');
 // // // test_btn.addEventListener('click', () => {
@@ -25,12 +37,12 @@ stop_btn.style.display="none";
 start_btn.addEventListener('click', () => {
     window.electronAPI.start_listener();
     start_btn.style.display="none";
-    stop_btn.style.display="inline";
+    stop_btn.style.display="inline-block";
 });
 
 stop_btn.addEventListener('click', () => {
     window.electronAPI.stop_listener();
-    start_btn.style.display="inline";
+    start_btn.style.display="inline-block";
     stop_btn.style.display="none";
 });
 

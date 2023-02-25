@@ -110,6 +110,10 @@ select.twitch{
   
 }
 
+svg:hover{
+  stroke:#FFFFFF;
+}
+
 input.twitch{
   border-radius: 4px;
   background-color: #3E3E40;
@@ -544,6 +548,11 @@ button.round_btn {
   font-family: "Inter", "Roobert", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #EFEFF1;
   font-size: 13px;
+  font-weight: 600;
+}
+
+.large_text {
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -6893,8 +6902,16 @@ button.bg-light:focus {
   background-color: #57616B;
 }
 
+.bg-med-light-twitch{
+  background-color: #363639;
+}
+
 .bg-dark-twitch {
   background-color: #18181B;
+}
+
+.bg-round-btn {
+  background-color: #2B2B2D;
 }
 
 .bg-vdark-twitch {

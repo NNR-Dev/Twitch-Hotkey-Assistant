@@ -4,12 +4,18 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap Resume Page Template</title>
+    <title>Settings</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
   </head>
   <body tabindex="-1" class="bg-dark-twitch" id="body">
     <div class="container text-white bg-dark-twitch">
+		<ul class="nav nav-tabs">
+		    <li class="nav-item" id="user_nav"> <a class="nav-link disabled" id="user_anchor" href="settings.html">User Data</a> </li>
+		    <li class="nav-item" id="bind_nav"> <a class="nav-link active" href="#">Hotkey Settings</a> </li>
+		    <li class="nav-item" id="settings_nav"> <a class="nav-link disabled" id="settings_anchor" href="#">Misc. Settings</a> </li>
+	      </ul>
+		<br>
 		<div style="margin-bottom:0.3cm;height=50px;display:block;">
 			<div style="float:left;margin-right:4px;height:40px;width:120px;position:relative;">
 				<button type="button" onclick="create_binding_panel()" class="top_btn round_btn" id="add_hotkey_btn" style="width:120px; position:absolute;top:62%;">Add New Hotkey</button>

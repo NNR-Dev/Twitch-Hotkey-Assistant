@@ -277,15 +277,37 @@ const scrollable_div = document.getElementById('scrollable');
 
 const default_bind_btn = document.getElementById('default_bind_btn');
 
+const user_panel_btn = document.getElementById('user_nav');
+const settings_panel_btn = document.getElementById('settings_nav');
+const save_bind_btn = document.getElementById("save_bind_button");
+save_bind_btn.style.display='none';
+
 window.electronAPI.get_rewards((event, value) => {
     rewards = value;
 })
+
+function enable_navbar(){
+    user_panel_btn.addEventListener('click', () => {
+        window.electronAPI.log_message("rrrrrrrrrrrrrrrrrrrr");
+        get_binding_data();
+        window.electronAPI.open_settings_window();
+    });
+    user_anchor = document.getElementById("user_anchor");
+    window.electronAPI.log_message(user_anchor.className);
+    user_anchor.setAttribute("class", "nav-link");
+
+    settings_anchor = document.getElementById("settings_anchor");
+    window.electronAPI.log_message(settings_anchor.className);
+    settings_anchor.setAttribute("class", "nav-link");
+    save_bind_btn.style.display='inline';
+}
 
 window.electronAPI.get_hotkey_dicts((event, bind_dict, duration_dict, default_bind) => {
     hotkey_bind_dict = bind_dict;
     hotkey_duration_dict = duration_dict;
     default_state_bind = default_bind;
     load_binding_panels();
+    enable_navbar();
 })
 
 //spaghetti courtesy of https://stackoverflow.com/a/24457420

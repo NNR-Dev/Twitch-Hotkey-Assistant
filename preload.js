@@ -15,6 +15,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     save_wrapper: () => ipcRenderer.send("save-wrapper"),
     start_listener: () => ipcRenderer.send("start-listener"),
     stop_listener: () => ipcRenderer.send("stop-listener"),
+    open_settings_window: () => ipcRenderer.send("open-settings-window"),
+    close_window: () => ipcRenderer.send("close-window"),
 });
 
 contextBridge.exposeInMainWorld('versions', {

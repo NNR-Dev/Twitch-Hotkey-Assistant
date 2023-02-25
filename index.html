@@ -1,27 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-	  <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
-    <title>Hello from Electron renderer!</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Twitch Hotkey Assistant</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
   </head>
   <body tabindex="-1" class="bg-dark-twitch">
+	  
 	 <div class="container text-white bg-dark-twitch p-4" style="overflow: hidden;">
-	 	<button class="round_btn" id="settings_btn" type="button">User Config</button>
-		<button class="round_btn" id="bindings_btn" type="button">Hotkey Config</button>
-		<button class="round_btn" id="save_btn" type="button">Save Config Settings</button>
-		<button class="round_btn right_btn" id="start_btn" type="button">Start Listener</button>
-		<button class="round_btn right_btn" id="stop_btn" type="button">Stop Listener</button>
+		 <div style="display:block; height:50px;">
+			<div class="bg-round-btn" style="float:left; height:32px; width:32px; border-radius:6px; display:inline-block; position:relative;">
+				<input type="image" src="images/feather/settings-grey.svg" alt="images/feather/settings-grey.svg" id="settings_btn" style="position:absolute;top:4px;left:4px;">
+			</div>
+			<div style="float:left;display:inline-block;padding-left:8px;">
+				<button class="round_btn right_btn" id="start_btn" type="button" style="height:32px">Start Listener</button>
+				<button class="round_btn right_btn" id="stop_btn" type="button" style="height:32px">Stop Listener</button>
+			</div>
+			<div style="float:right;display:inline-block;padding-left:8px;">
+				<button class="round_btn" id="exit_btn" type="button" style="height:32px">Exit</button>
+			</div>
+		</div>		 
+	 	<!--<button class="round_btn" id="settings_btn" type="button"></button>-->
+		<!--<button class="round_btn" id="bindings_btn" type="button">Hotkey Config</button>
+		<button class="round_btn" id="save_btn" type="button">Save Config Settings</button>-->
+		
 		<!--<button class="round_btn" id="test_add_text_btn" type="button">Add text</button>-->
+		 <label class="twitch_lbl large_text">Event Log:</label>
 		<div class="feed_scroll bg-med-twitch" id="text_feed"></div>
 	
 	</div>
