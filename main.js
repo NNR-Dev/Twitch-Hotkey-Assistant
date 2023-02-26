@@ -44,7 +44,7 @@ const scheduler = new ToadScheduler()
 var lock = new AsyncLock();
 config_path = path.join(app.getAppPath(), 'User_Data');
 storage.setDataPath(config_path);
-
+app.icon = "images/logo1.ico";
 const createWindow = (html_path, width = 800, height = 600, is_resizable = true, title="") => {
     const win = new BrowserWindow({
       width: width,
@@ -79,6 +79,7 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     ipcMain.on("close-window", close_window);
     main_window = createWindow("index.html", width = 600, height = 455, is_resizable=true, title="Twitch Hotkey Assistant");
     main_window.setMenu(null);
+    
     main_window.on('close', function () {
       app.quit();
     })
@@ -338,16 +339,8 @@ async function save_auth_settings(event, user_key){
     token_res = await retrieve_user_id();
     if (token_res){
         write_data_to_file(twitch_connection_info);
-        //settings_window.close();
     }
   }
-  
-  // console.log(status);
-  // let success = await status;
-  // console.log(success);
-  // if (success){
-    
-  // }
 }
 
 
@@ -434,7 +427,7 @@ function open_settings_window(){
 
 function create_settings_window(){
   settings_window = createWindow("settings.html", 560, 420, true, "Settings");
-  settings_window.setMenu(null)
+  //settings_window.setMenu(null)
   open_settings_window();
 }
 

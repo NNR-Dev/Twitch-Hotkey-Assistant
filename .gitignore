@@ -133,3 +133,5 @@ package-lock.json
 package.json
 
 images/*
+
+TwitchHotkeyAssistant-win32*

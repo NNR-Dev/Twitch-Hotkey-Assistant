@@ -6304,12 +6304,15 @@ a.close.disabled {
 }
 
 .bs-tooltip-top, .bs-tooltip-auto[x-placement^="top"] {
+  max-width: 100px;
   padding: 0.4rem 0;
 }
 
 .bs-tooltip-top .arrow, .bs-tooltip-auto[x-placement^="top"] .arrow {
   bottom: 0;
 }
+
+.tooltip .tooltip-inner { width: 100px; }
 
 .bs-tooltip-top .arrow::before, .bs-tooltip-auto[x-placement^="top"] .arrow::before {
   top: 0;

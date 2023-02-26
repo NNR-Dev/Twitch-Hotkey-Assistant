@@ -265,7 +265,6 @@ var keyboardMap = [
 // ipcRenderer.on('rewards-list', function (event,store) {
 //     rewards = store;
 // });
-
 var hotkey_bind_dict = {};
 var hotkey_duration_dict = {};
 var default_state_bind = "";
@@ -410,6 +409,10 @@ function get_binding_data(){
 
 function create_binding_panel(){
     //window.electronAPI.log_message(rewards);
+    let scroll_to_bottom = false;
+    if (scrollable_div.scrollTop === (scrollable_div.scrollHeight - scrollable_div.offsetHeight)){
+        scroll_to_bottom = true;
+    }
     var new_div = document.createElement("div");
     new_div.setAttribute("class", "bind_div center_div");
     new_div.setAttribute("style", "margin-bottom:0.1cm;")
@@ -483,6 +486,9 @@ function create_binding_panel(){
     
 
     scrollable_div.appendChild(new_div);
+    if (scroll_to_bottom){
+        scrollable_div.scrollTop = scrollable_div.scrollHeight;
+    }
     return new_div;
     
 }
