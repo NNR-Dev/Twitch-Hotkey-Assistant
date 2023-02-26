@@ -433,7 +433,7 @@ function open_settings_window(){
 }
 
 function create_settings_window(){
-  settings_window = createWindow("settings.html", 560, 460, true, "Settings");
+  settings_window = createWindow("settings.html", 560, 420, true, "Settings");
   settings_window.setMenu(null)
   open_settings_window();
 }
