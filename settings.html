@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height:100%">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,28 +8,29 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
   </head>
-  <body class="bg-dark-twitch" id="body">
-    <div class="container text-white bg-dark-twitch">
-		<ul class="nav nav-tabs">
-		    <li class="nav-item user_nav"> <a class="nav-link active" href="#">User Data</a> </li>
-		    <li class="nav-item" id="bind_nav"> <a class="nav-link" href="bind_settings.html">Hotkey Settings</a> </li>
-		    <li class="nav-item"> <a class="nav-link" href="#">Misc. Settings&nbsp;</a> </li>
-	      </ul>
-		<br>
-    	<div style="padding-bottom: 15px;">
+  <body class="bg-dark-twitch" id="body" style="height:100%">
+    <div class="container text-white bg-dark-twitch" style="height:100%">	
+		<div style="height:45px">
+			<ul class="nav nav-tabs">
+				<li class="nav-item user_nav"> <a class="nav-link active" href="#">User Data</a> </li>
+				<li class="nav-item" id="bind_nav"> <a class="nav-link" href="bind_settings.html">Hotkey Settings</a> </li>
+				<li class="nav-item"> <a class="nav-link" href="#">Misc. Settings&nbsp;</a> </li>
+			</ul>
+		</div>
+		<div style="margin-top: 10px; margin-bottom:10px; height: 30px;">
+			<label id="auth_warning_lbl" class="twitch_lbl" style="display:none;">Please authenticate this application with Twitch before assigning hotkeys.</label>
+		</div>
+    	<div style="height: 40px;">
 		  <button type="button" class="round_btn" id="twitch_auth_button">Authenticate with Twitch</button>
     	</div>
-	  <div>
+	  	<div style="height: 40px;">
 			<label class="twitch_lbl" for="textfield">Twitch User Key:&nbsp;&nbsp;</label>
     	<input type="text" id="user_key_field" class="twitch">
 		</div>
-		<br>
-		<!-- <div>
-			<label for="textfield">Twitch Username:</label>
-    	<input type="text" id="username_field">
-		</div> -->
-		<div>
-		  <button type="button" class="round_btn" id="submit_auth_button" style="position:absolute; bottom:4.75%;">Submit User Settings</button>
+		<div class="settings_empty_div">
+		</div>
+		<div style="height:50px;">
+		  <button type="button" class="round_btn" id="submit_auth_button">Submit User Settings</button>
     	</div>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

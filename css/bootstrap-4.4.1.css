@@ -102,6 +102,10 @@ div.bind_scroll {
   text-align: justify;
 }
 
+.settings_empty_div {
+  height: calc(100% - 45px - 40px - 40px - 50px - 50px);
+}
+
 select.twitch{
   border-radius: 4px;
   background-color: #2B2B2D;
