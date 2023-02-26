@@ -96,7 +96,7 @@ body {
 div.bind_scroll {
   margin: 4px, 4px;
   padding: 4px;
-  height: 140px;
+  height: calc(100% - 45px - 20px - 70px - 40px - 50px - 15px);
   overflow-x: hidden;
   overflow-y: auto;
   text-align: justify;

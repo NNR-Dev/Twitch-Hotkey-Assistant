@@ -22,7 +22,6 @@ var event_expiry_time = -1;
 //var hotkey_bind_dict = {};
 //var hotkey_duration_dict = {};
 
-var windows = new Set();
 var main_window;
 var twitch_connection_info;// = new TwitchConnectionInfo(app_id="snbnlpo27abzy10fsg82bqqly26f80", user_key=null, user_id=null, username=null, session_id=null, subscription_type=null,
 //reward_list=null, key_obtained_time=null, hotkey_bind_dict = hotkey_bind_dict, hotkey_duration_dict = hotkey_duration_dict);
@@ -60,8 +59,6 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
       resizable: is_resizable,
       icon: "images/logo1.ico",
     });
-    windows.add(win);
-  
     win.loadFile(html_path);
     return win;
   }
@@ -82,23 +79,19 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     ipcMain.on("close-window", close_window);
     main_window = createWindow("index.html", width = 600, height = 455, is_resizable=true, title="Twitch Hotkey Assistant");
     main_window.setMenu(null);
+    main_window.on('close', function () {
+      app.quit();
+    })
     read_data_from_file();
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) {
         main_window = createWindow("index.html");
-        
       }
     });
   });
   
 
   app.on('window-all-closed', () => {
-    try {
-      // robot.stopJar();
-      // proc.kill();
-    } catch (error) {
-      
-    }
     if (process.platform !== 'darwin') {
       app.quit();
     }
