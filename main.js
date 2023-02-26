@@ -97,9 +97,15 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     }
   });
 
+function is_ready(){
+  return !(twitch_connection_info.user_id === "" || twitch_connection_info.user_key === "" || 
+  Object.keys(twitch_connection_info.hotkey_bind_dict).length === 0 || twitch_connection_info.reward_list.length === 0);
+}
+
 function start_listener(){
-  x="yo"
-  event_queue.push('drimk');
+  if (!is_ready()){
+    dialog.showMessageBox(options={title: 'Error', message: "Please authenticate this app with Twitch and set your keybinds in the settings panel!", type:'error'});
+  }
   let feed_message = "Started listener";
   main_window.webContents.send("add-feed-label", feed_message);
   //press_key("e");
@@ -370,7 +376,7 @@ function retrieve_user_id(){
 async function create_bindings_window(){
   let success = await retrieve_channel_point_rewards();
   if (success){
-    console.log(custom_rewards);
+    console.log(twitch_connection_info.reward_list);
     bindings_window = settings_window;//createWindow("bind_settings.html", 560, 400, false);
     //bindings_window.setMenu(null);
     get_custom_rewards(bindings_window);
@@ -385,7 +391,7 @@ function test_create_feed_label(){
 }
 
 async function retrieve_channel_point_rewards(){
-  custom_rewards = [];
+  let custom_rewards = [];
   let url = "https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id="+twitch_connection_info.user_id+"&perPage=50"
   //console.log(`Bearer ${twitch_connection_info.user_key}`);
   let config = {
@@ -401,6 +407,7 @@ async function retrieve_channel_point_rewards(){
       custom_rewards.push(element.title);
       //console.log(element.title);
     });
+    twitch_connection_info.reward_list = custom_rewards;
     return true;
       // console.log(response.data);
       // twitch_connection_info.user_id=response.data.data[0].id;
@@ -449,7 +456,7 @@ function get_custom_rewards(b_window){
   //console.log(custom_rewards);
   //console.log(bindings_window);
   //b_window.webContents.on('did-finish-load', function() {
-    b_window.webContents.send('custom-rewards', custom_rewards);
+    b_window.webContents.send('custom-rewards', twitch_connection_info.reward_list);
   //});
   //console.log("sent");
 }
