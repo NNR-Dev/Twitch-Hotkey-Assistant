@@ -106,6 +106,12 @@ div.bind_scroll {
   height: calc(100% - 45px - 40px - 40px - 50px - 50px);
 }
 
+.setting_radio {
+  display: inline;
+  float: left;
+  padding-right: 8px;
+}
+
 select.twitch{
   border-radius: 4px;
   background-color: #2B2B2D;

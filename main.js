@@ -1,5 +1,6 @@
 class TwitchConnectionInfo {
-  constructor(app_id, user_key, user_id, username, session_id, subscription_type, reward_list, key_obtained_time, hotkey_bind_dict, hotkey_duration_dict, default_bind){
+  constructor(app_id, user_key, user_id, username, session_id, subscription_type, reward_list, 
+    key_obtained_time, hotkey_bind_dict, hotkey_duration_dict, default_bind, timestamp_type){
     this.app_id = app_id;
     this.user_key = user_key;
     this.user_id = user_id;
@@ -11,6 +12,7 @@ class TwitchConnectionInfo {
     this.hotkey_bind_dict = hotkey_bind_dict;
     this.hotkey_duration_dict = hotkey_duration_dict;
     this.default_bind = default_bind;
+    this.timestamp_type = timestamp_type;
   }
 }
 
@@ -77,6 +79,8 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     ipcMain.on("stop-listener", stop_listener);
     ipcMain.on("open-settings-window", open_settings_window);
     ipcMain.on("close-window", close_window);
+    ipcMain.on("save-misc-settings", save_misc_settings);
+    ipcMain.on("open-misc-window", open_misc_window);
     main_window = createWindow("index.html", width = 600, height = 455, is_resizable=true, title="Twitch Hotkey Assistant");
     main_window.setMenu(null);
     
@@ -277,11 +281,13 @@ function read_data_from_file(){
   new_key_obtained_time = json_obj.key_obtained_time === undefined ? "" : json_obj.key_obtained_time;
   new_hotkey_bind_dict = json_obj.hotkey_bind_dict === undefined ? {} : json_obj.hotkey_bind_dict;
   new_hotkey_duration_dict = json_obj.hotkey_duration_dict === undefined ? {} : json_obj.hotkey_duration_dict;
-  new_default_bind = json_obj.default_bind == undefined ? "" : json_obj.default_bind;
+  new_default_bind = json_obj.default_bind === undefined ? "" : json_obj.default_bind;
+  new_timestamp_type = json_obj.timestamp_type === undefined ? "time" : json_obj.timestamp_type;
+  console.log("new type:"+new_timestamp_type);
   twitch_connection_info = new TwitchConnectionInfo(new_app_id, new_user_key, new_user_id, 
                                                     new_username, new_session_id, new_subscription_type,
                                                     new_reward_list, new_key_obtained_time, new_hotkey_bind_dict,
-                                                    new_hotkey_duration_dict, new_default_bind);
+                                                    new_hotkey_duration_dict, new_default_bind, new_timestamp_type);
   //console.log(json_obj);
 }
 
@@ -341,6 +347,11 @@ async function save_auth_settings(event, user_key){
         write_data_to_file(twitch_connection_info);
     }
   }
+}
+
+function save_misc_settings(event, timestamp_type){
+  twitch_connection_info.timestamp_type = timestamp_type;
+  write_data_to_file(twitch_connection_info);
 }
 
 
@@ -425,9 +436,14 @@ function open_settings_window(){
   }
 }
 
+function open_misc_window(){
+  console.log("Timestamp type:"+twitch_connection_info.timestamp_type);
+  settings_window.webContents.send("get-misc-settings", twitch_connection_info.timestamp_type);
+}
+
 function create_settings_window(){
   settings_window = createWindow("settings.html", 560, 420, true, "Settings");
-  settings_window.setMenu(null)
+  //settings_window.setMenu(null)
   open_settings_window();
 }
 

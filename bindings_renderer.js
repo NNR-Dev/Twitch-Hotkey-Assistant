@@ -278,6 +278,7 @@ const default_bind_btn = document.getElementById('default_bind_btn');
 
 const user_panel_btn = document.getElementById('user_nav');
 const settings_panel_btn = document.getElementById('settings_nav');
+const misc_panel_btn = document.getElementById('settings_nav');
 const save_bind_btn = document.getElementById("save_bind_button");
 save_bind_btn.style.display='none';
 
@@ -291,6 +292,10 @@ function enable_navbar(){
         get_binding_data();
         window.electronAPI.open_settings_window();
     });
+    misc_panel_btn.addEventListener('click', () => {
+        get_binding_data();
+        window.electronAPI.open_misc_window();
+    })
     user_anchor = document.getElementById("user_anchor");
     window.electronAPI.log_message(user_anchor.className);
     user_anchor.setAttribute("class", "nav-link");
@@ -298,6 +303,7 @@ function enable_navbar(){
     settings_anchor = document.getElementById("settings_anchor");
     window.electronAPI.log_message(settings_anchor.className);
     settings_anchor.setAttribute("class", "nav-link");
+    
     save_bind_btn.style.display='inline';
 }
 

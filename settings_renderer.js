@@ -13,6 +13,14 @@ bind_panel_btn.addEventListener('click', () => {
     window.electronAPI.create_bindings_window();
 })
 
+const misc_panel_btn = document.getElementById('settings_nav');
+
+misc_panel_btn.addEventListener('click', () => {
+    save_user_settings();
+    window.electronAPI.log_message("pepep0epepeppepe");
+    window.electronAPI.open_misc_window();
+})
+
 const submit_button = document.getElementById('submit_auth_button');
 submit_button.addEventListener('click', () => {
     save_user_settings();
