@@ -1,10 +1,10 @@
-const save_btn = document.getElementById('save_settings_btn');
-save_btn.addEventListener('click', () => {
-    save_misc_settings();
-});
+// // // const save_btn = document.getElementById('save_settings_btn');
+// // // save_btn.addEventListener('click', () => {
+// // //     save_misc_settings();
+// // // });
 const user_panel_btn = document.getElementById('user_nav');
 const bind_panel_btn = document.getElementById('bind_nav');
-const save_bind_btn = document.getElementById("save_bind_button");
+
 function save_misc_settings(){
     let timestamp_setting = get_radio_val("timestamp_radio_group");
     window.electronAPI.log_message(timestamp_setting);

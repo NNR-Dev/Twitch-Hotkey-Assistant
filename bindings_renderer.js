@@ -279,8 +279,8 @@ const default_bind_btn = document.getElementById('default_bind_btn');
 const user_panel_btn = document.getElementById('user_nav');
 const settings_panel_btn = document.getElementById('settings_nav');
 const misc_panel_btn = document.getElementById('settings_nav');
-const save_bind_btn = document.getElementById("save_bind_button");
-save_bind_btn.style.display='none';
+//const save_bind_btn = document.getElementById("save_bind_button");
+//save_bind_btn.style.display='none';
 
 window.electronAPI.save_current_window((event) => {
     get_binding_data();
@@ -309,7 +309,7 @@ function enable_navbar(){
     window.electronAPI.log_message(settings_anchor.className);
     settings_anchor.setAttribute("class", "nav-link");
     
-    save_bind_btn.style.display='inline';
+    //save_bind_btn.style.display='inline';
 }
 
 window.electronAPI.get_hotkey_dicts((event, bind_dict, duration_dict, default_bind) => {

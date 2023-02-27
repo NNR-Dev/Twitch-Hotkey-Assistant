@@ -387,6 +387,9 @@ async function create_bindings_window(){
     get_custom_rewards(bindings_window);
     get_dicts(bindings_window); //twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict);
     
+  } else {
+    settings_window.loadFile("settings.html");
+    open_settings_window();
   }
   
 }

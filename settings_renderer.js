@@ -26,10 +26,10 @@ misc_panel_btn.addEventListener('click', () => {
     window.electronAPI.open_misc_window();
 })
 
-const submit_button = document.getElementById('submit_auth_button');
-submit_button.addEventListener('click', () => {
-    save_user_settings();
-});
+// // // const submit_button = document.getElementById('submit_auth_button');
+// // // submit_button.addEventListener('click', () => {
+// // //     save_user_settings();
+// // // });
 
 function save_user_settings(){
     let user_key = document.getElementById('user_key_field').value;
