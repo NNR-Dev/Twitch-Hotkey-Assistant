@@ -96,14 +96,14 @@ body {
 div.bind_scroll {
   margin: 4px, 4px;
   padding: 4px;
-  height: calc(100% - 45px - 20px - 70px - 40px - 50px - 15px);
+  height: calc(100% - 45px - 20px - 70px - 40px - 15px);
   overflow-x: hidden;
   overflow-y: auto;
   text-align: justify;
 }
 
 .settings_empty_div {
-  height: calc(100% - 45px - 40px - 40px - 50px - 50px);
+  height: calc(100% - 45px - 40px - 40px - 50px);
 }
 
 .setting_radio {
