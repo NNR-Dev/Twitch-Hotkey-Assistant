@@ -11,7 +11,12 @@ const bind_panel_btn = document.getElementById('bind_nav');
 bind_panel_btn.addEventListener('click', () => {
     save_user_settings();
     window.electronAPI.create_bindings_window();
-})
+});
+
+window.electronAPI.save_current_window((event) => {
+    save_user_settings();
+    window.electronAPI.close_setting_window();
+});
 
 const misc_panel_btn = document.getElementById('settings_nav');
 
@@ -44,4 +49,4 @@ function hide_warn_label(hide){
 window.electronAPI.get_auth_key((event, key) => {
     document.getElementById('user_key_field').value = key;
     hide_warn_label(key !== "");
-})
+});

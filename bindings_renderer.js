@@ -282,6 +282,11 @@ const misc_panel_btn = document.getElementById('settings_nav');
 const save_bind_btn = document.getElementById("save_bind_button");
 save_bind_btn.style.display='none';
 
+window.electronAPI.save_current_window((event) => {
+    get_binding_data();
+    window.electronAPI.close_setting_window();
+})
+
 window.electronAPI.get_rewards((event, value) => {
     rewards = value;
 })

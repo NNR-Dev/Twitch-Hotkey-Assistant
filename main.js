@@ -81,6 +81,7 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     ipcMain.on("close-window", close_window);
     ipcMain.on("save-misc-settings", save_misc_settings);
     ipcMain.on("open-misc-window", open_misc_window);
+    ipcMain.on("close-setting-window", close_setting_window);
     main_window = createWindow("index.html", width = 600, height = 455, is_resizable=true, title="Twitch Hotkey Assistant");
     main_window.setMenu(null);
     
@@ -434,17 +435,33 @@ function open_settings_window(){
   if (twitch_connection_info.user_key !== ""){
     get_key(twitch_connection_info.user_key);
   }
+  
 }
 
 function open_misc_window(){
   console.log("Timestamp type:"+twitch_connection_info.timestamp_type);
-  settings_window.webContents.send("get-misc-settings", twitch_connection_info.timestamp_type);
+  settings_window.webContents.removeAllListeners('did-finish-load');
+  settings_window.webContents.on('did-finish-load', function() {
+    settings_window.webContents.send("get-misc-settings", twitch_connection_info.timestamp_type);
+  });
+  
 }
 
 function create_settings_window(){
   settings_window = createWindow("settings.html", 560, 420, true, "Settings");
+  settings_window.on('close', event_close_handler);
   //settings_window.setMenu(null)
   open_settings_window();
+}
+
+function event_close_handler(e){
+  settings_window.webContents.send("save-current-window", "");
+  e.preventDefault();
+}
+
+function close_setting_window(){
+  settings_window.removeListener('close', event_close_handler);
+  settings_window.close();
 }
 
 function get_key(key){

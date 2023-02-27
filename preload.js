@@ -20,6 +20,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     save_misc_settings: (timestamp_type) => ipcRenderer.send("save-misc-settings", timestamp_type),
     get_misc_settings: (timestamp_type) => ipcRenderer.on("get-misc-settings", timestamp_type),
     open_misc_window: () => ipcRenderer.send("open-misc-window"),
+    save_current_window: (event) => ipcRenderer.on("save-current-window", event),
+    close_setting_window: () => ipcRenderer.send("close-setting-window"),
 });
 
 contextBridge.exposeInMainWorld('versions', {

@@ -45,5 +45,11 @@ function set_radio_val(name, val) {
 }
 
 window.electronAPI.get_misc_settings((event, timestamp_type) => {
-    set_radio_val("timestamp_radio_group", timestamp_type);
-})
+    window.electronAPI.log_message("setting radiobutton!");
+    set_radio_val("timestamp_radio_group", String(timestamp_type));
+});
+
+window.electronAPI.save_current_window((event) => {
+    save_misc_settings();
+    window.electronAPI.close_setting_window();
+});
