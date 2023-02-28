@@ -275,6 +275,10 @@ const scrollable_div = document.getElementById('scrollable');
 //var bind_count = 0;
 
 const default_bind_btn = document.getElementById('default_bind_btn');
+default_bind_btn.addEventListener('contextmenu', function(event) {
+    default_bind_btn.innerHTML ="Click to Bind";
+    default_bind_btn.setAttribute("value", "key_empty");
+}, false);
 
 const user_panel_btn = document.getElementById('user_nav');
 const settings_panel_btn = document.getElementById('settings_nav');
@@ -462,6 +466,10 @@ function create_binding_panel(){
     //window.electronAPI.log_message(bind_button_id);
     bind_button.style.marginRight = "5px";
     bind_button.style.marginLeft = "5px";
+    bind_button.addEventListener('contextmenu', function(event) {
+        bind_button.innerHTML ="Click to Bind";
+        bind_button.setAttribute("value", "key_empty");
+    }, false);
 
     //bind_count++;
     duration_field.style.marginRight = "5px";
