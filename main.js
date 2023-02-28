@@ -216,8 +216,9 @@ function ws_parse_message(msg){
         console.log("Fulfilled");
         let title = msg.payload.event.reward.title;
         if (title in twitch_connection_info.hotkey_bind_dict){
+          let redeemer_name = msg.payload.event.user_name;
           console.log("Appending");
-          let feed_message = "Reward redeemed: "+title;
+          let feed_message = String(redeemer_name) + " redeemed reward: "+String(title);
           main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
           lock.acquire(event_queue, function() {
             event_queue.push(title);
