@@ -332,7 +332,7 @@ function isNumeric(value) {
 function load_binding_panels(){
     window.electronAPI.log_message("starting loading");
     default_bind_btn.value = default_state_bind;
-    default_bind_btn.innerHTML = default_state_bind === "key_empty" ? "Click to Bind" : default_state_bind;
+    default_bind_btn.innerHTML = (default_state_bind === "key_empty" || default_state_bind === "") ? "Click to Bind" : default_state_bind;
     for (const [key, values] of Object.entries(hotkey_bind_dict)){
         duration = hotkey_duration_dict[key];
         values.forEach(value => {        
