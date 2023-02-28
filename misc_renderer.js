@@ -4,6 +4,7 @@
 // // // });
 const user_panel_btn = document.getElementById('user_nav');
 const bind_panel_btn = document.getElementById('bind_nav');
+const about_panel_btn = document.getElementById('about_nav');
 
 function save_misc_settings(){
     let timestamp_setting = get_radio_val("timestamp_radio_group");
@@ -21,6 +22,11 @@ bind_panel_btn.addEventListener('click', () => {
 user_panel_btn.addEventListener('click', () => {
     save_misc_settings();
     window.electronAPI.open_settings_window();
+})
+
+about_panel_btn.addEventListener('click', () => {
+    save_misc_settings();
+    window.electronAPI.open_about_window();
 })
 
 function get_radio_val(name) {

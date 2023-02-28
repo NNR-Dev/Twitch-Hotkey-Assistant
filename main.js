@@ -21,6 +21,8 @@ var bindings_window;
 
 var event_expiry_time = -1;
 
+const version_number = "23.02a";
+
 //var hotkey_bind_dict = {};
 //var hotkey_duration_dict = {};
 
@@ -82,6 +84,7 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     ipcMain.on("save-misc-settings", save_misc_settings);
     ipcMain.on("open-misc-window", open_misc_window);
     ipcMain.on("close-setting-window", close_setting_window);
+    ipcMain.on("open-about-window", open_about_window);
     main_window = createWindow("index.html", width = 600, height = 455, is_resizable=true, title="Twitch Hotkey Assistant");
     main_window.setMenu(null);
     
@@ -453,6 +456,13 @@ function open_settings_window(){
     get_key(twitch_connection_info.user_key);
   }
   
+}
+
+function open_about_window(){  
+  settings_window.webContents.removeAllListeners('did-finish-load');
+  settings_window.webContents.on('did-finish-load', function() {
+    settings_window.webContents.send("get-version-data", version_number);
+  });
 }
 
 function open_misc_window(){

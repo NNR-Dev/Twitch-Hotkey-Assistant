@@ -7,24 +7,30 @@ auth_button.addEventListener('click', () => {
 const warning_label = document.getElementById("auth_warning_lbl");
 
 const bind_panel_btn = document.getElementById('bind_nav');
+const misc_panel_btn = document.getElementById('settings_nav');
+const about_panel_btn = document.getElementById('about_nav');
 
 bind_panel_btn.addEventListener('click', () => {
     save_user_settings();
     window.electronAPI.create_bindings_window();
 });
 
-window.electronAPI.save_current_window((event) => {
-    save_user_settings();
-    window.electronAPI.close_setting_window();
-});
-
-const misc_panel_btn = document.getElementById('settings_nav');
-
 misc_panel_btn.addEventListener('click', () => {
     save_user_settings();
     window.electronAPI.log_message("pepep0epepeppepe");
     window.electronAPI.open_misc_window();
 })
+
+about_panel_btn.addEventListener('click', () => {
+    save_user_settings();
+    window.electronAPI.open_about_window();
+})
+
+window.electronAPI.save_current_window((event) => {
+    save_user_settings();
+    window.electronAPI.close_setting_window();
+});
+
 
 // // // const submit_button = document.getElementById('submit_auth_button');
 // // // submit_button.addEventListener('click', () => {

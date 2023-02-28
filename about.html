@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%">
+  <head>
+	<link href="css/bootstrap-4.4.1.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Settings</title>
+    <!-- Bootstrap -->
+  </head>
+  <body class="bg-dark-twitch" id="body" style="height:100%">
+    <div class="container-fluid text-white bg-dark-twitch" style="height:100%">	
+		<div style="height:45px">
+			<ul class="nav nav-tabs">
+				<li class="nav-item" id="user_nav"> <a class="nav-link" href="settings.html">User Data</a> </li>
+				<li class="nav-item" id="bind_nav"> <a class="nav-link" href="bind_settings.html">Hotkey Settings</a> </li>
+				<li class="nav-item" id="settings_nav"> <a class="nav-link" href="misc_settings.html">Misc. Settings&nbsp;</a> </li>
+				<li class="nav-item"> <a class="nav-link active" href="#">About&nbsp;</a> </li>
+			</ul>
+		</div>
+		<div style="margin-top: 10px; margin-bottom:10px; height: 30px;">
+			<label class="twitch_lbl">Twitch Hotkey Assistant allows Twitch chat to trigger actions assigned to hotkeys on the streamer's computer (at the streamer's discretion). For example, Twitch Hotkey Assistant could be configured to change a vTuber avatar's outfits and backgrounds in response to channel point rewards.</label>
+			<label class="twitch_lbl"><em>Note to streamers: you are responsible for checking that your chosen hotkeys/keybindings do not overlap with existing keyboard shortcuts, system commands, or otherwise.</em></label>
+			<br>
+			<br>
+			<label class="twitch_lbl" id="version_lbl">Current version: </label>
+			<br>
+			<br>
+			<label class="twitch_lbl">Found bugs? Send reports to NotNotRob@outlook.com </label>
+		</div>
+    	
+
+		<div class="settings_empty_div">
+		</div>
+		<!--<div style="height:50px;">
+		  <button type="button" class="round_btn" id="save_settings_btn">Save Settings</button>
+    	</div>-->
+	  </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap-4.4.1.js"></script>
+  </body>
+  <script src="about_renderer.js"></script>
+</html>

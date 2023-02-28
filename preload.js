@@ -22,6 +22,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     open_misc_window: () => ipcRenderer.send("open-misc-window"),
     save_current_window: (event) => ipcRenderer.on("save-current-window", event),
     close_setting_window: () => ipcRenderer.send("close-setting-window"),
+    open_about_window: () => ipcRenderer.send("open-about-window"),
+    get_version_data: (version_number) => ipcRenderer.on('get-version-data', version_number),
 });
 
 contextBridge.exposeInMainWorld('versions', {
