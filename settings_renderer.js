@@ -17,7 +17,6 @@ bind_panel_btn.addEventListener('click', () => {
 
 misc_panel_btn.addEventListener('click', () => {
     save_user_settings();
-    window.electronAPI.log_message("pepep0epepeppepe");
     window.electronAPI.open_misc_window();
 })
 
