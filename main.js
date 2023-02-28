@@ -113,7 +113,7 @@ function start_listener(){
     dialog.showMessageBox(options={title: 'Error', message: "Please authenticate this app with Twitch and set your keybinds in the settings panel!", type:'error'});
   }
   let feed_message = "Started listener";
-  main_window.webContents.send("add-feed-label", feed_message);
+  main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
   //press_key("e");
   const event_task = new Task('event_queue_manager', read_event_queue);
   const event_job = new SimpleIntervalJob({ seconds: 1, }, event_task);
@@ -132,7 +132,7 @@ function start_listener(){
 
 function stop_listener(){
   let feed_message = "Stopped listener";
-  main_window.webContents.send("add-feed-label", feed_message);
+  main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
   try {
     scheduler.stop();
     if (ws.readyState !== WebSocket.OPEN){
@@ -163,7 +163,7 @@ function press_key(key_name){
   // .release(key_name)
   // .go().then();//robot.stopJar);
   let feed_message = "Pressed key: "+key_name;
-  main_window.webContents.send("add-feed-label", feed_message);
+  main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
   robot.keyTap(key_name);
 }
 
@@ -178,7 +178,7 @@ function read_event_queue(){
         let duration = parseInt(twitch_connection_info.hotkey_duration_dict[event_name]);
         event_expiry_time = duration <= 0 ? -1 : seconds + duration;
         let feed_message = "Responding to event: "+event_name;
-        main_window.webContents.send("add-feed-label", feed_message);
+        main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
         //console.log("PRESSING FOR EVENT " + key_name);
         press_key(key_name);
       }
@@ -186,7 +186,7 @@ function read_event_queue(){
       console.log("RETURNING TO DEFAULT");
       let key_name = String(twitch_connection_info.default_bind).toLowerCase();
       let feed_message = "Returning to default state";
-      main_window.webContents.send("add-feed-label", feed_message);
+      main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
       press_key(key_name);
       event_expiry_time = -1;
     }
@@ -216,7 +216,7 @@ function ws_parse_message(msg){
         if (title in twitch_connection_info.hotkey_bind_dict){
           console.log("Appending");
           let feed_message = "Reward redeemed: "+title;
-          main_window.webContents.send("add-feed-label", feed_message);
+          main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
           lock.acquire(event_queue, function() {
             event_queue.push(title);
           }).then(function(){});
@@ -395,7 +395,7 @@ async function create_bindings_window(){
 }
 
 function test_create_feed_label(){
-  main_window.webContents.send("add-feed-label", "test text!");
+  main_window.webContents.send("add-feed-label", "test text!", twitch_connection_info.timestamp_type);
 }
 
 async function retrieve_channel_point_rewards(){

@@ -46,7 +46,7 @@ stop_btn.addEventListener('click', () => {
     stop_btn.style.display="none";
 });
 
-function get_timestamp(){
+function get_timestamp(timestamp_type){
     var currentdate = new Date();
     var datestr = "["+((currentdate.getDate() < 10)?"0":"") + currentdate.getDate() + "/"
     + (((currentdate.getMonth()+1) < 10)?"0":"") + (currentdate.getMonth()+1)  + "/" 
@@ -56,12 +56,18 @@ function get_timestamp(){
     var timestr =  ((currentdate.getHours() < 10)?"0":"") + currentdate.getHours() + ":"  
                 + ((currentdate.getMinutes() < 10)?"0":"") + currentdate.getMinutes() + ":" 
                 + ((currentdate.getSeconds() < 10)?"0":"") + currentdate.getSeconds() + " ";
-
-    var datetime = timestr+"       ";
+    
+    var datetime = "";
+    if (timestamp_type === "datetime"){
+        datetime = datestr + timestr;
+    }
+    else if (timestamp_type === "time"){
+        datetime = timestr+"       ";
+    }
     return datetime;
 }
 
-window.electronAPI.add_feed_label((event, string) => {
+window.electronAPI.add_feed_label((event, string, timestamp_type) => {
     let scroll_to_bottom = false;
     if (feed_div.scrollTop === (feed_div.scrollHeight - feed_div.offsetHeight)){
         scroll_to_bottom = true;
@@ -79,7 +85,7 @@ window.electronAPI.add_feed_label((event, string) => {
     timestamp_label.style.fontFamily = "Arial, Helvetica, sans-serif";
     timestamp_label.style.fontSize = "x-small";
     timestamp_label.style.padding = "0px 0px";
-    timestamp_label.innerHTML = get_timestamp();
+    timestamp_label.innerHTML = get_timestamp(timestamp_type);
     feed_div.appendChild(timestamp_label);
     feed_div.appendChild(label);
     let br = document.createElement("br");
