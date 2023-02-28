@@ -453,7 +453,7 @@ function open_misc_window(){
 function create_settings_window(){
   settings_window = createWindow("settings.html", 560, 420, true, "Settings");
   settings_window.on('close', event_close_handler);
-  //settings_window.setMenu(null)
+  settings_window.setMenu(null)
   open_settings_window();
 }
 
