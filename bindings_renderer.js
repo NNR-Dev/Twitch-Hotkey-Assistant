@@ -434,7 +434,7 @@ function create_binding_panel(){
     new_div.style.backgroundColor = "#57616B";
     new_div.style.borderRadius = "4px";
     new_div.style.height = "40px";
-    new_div.style.width = "480px";
+    new_div.style.width = "510px";
     let selecter = document.createElement("select");
     selecter.style.width = "150px";
     selecter.style.height= "30px";
