@@ -175,14 +175,16 @@ function read_event_queue(){
         let event_name = event_queue.shift();
         let key_name = String(twitch_connection_info.hotkey_bind_dict[event_name]);
         key_name = key_name.toLowerCase();
-        let duration = parseInt(twitch_connection_info.hotkey_duration_dict[event_name]);
-        event_expiry_time = duration <= 0 ? -1 : seconds + duration;
-        let feed_message = "Responding to event: "+event_name;
-        main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
-        //console.log("PRESSING FOR EVENT " + key_name);
-        press_key(key_name);
+        if (key_name !== "" && key_name !== "key_empty"){
+          let duration = parseInt(twitch_connection_info.hotkey_duration_dict[event_name]);
+          event_expiry_time = duration <= 0 ? -1 : seconds + duration;
+          let feed_message = "Responding to event: "+event_name;
+          main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
+          //console.log("PRESSING FOR EVENT " + key_name);
+          press_key(key_name);
+        }
       }
-    } else if (seconds >= event_expiry_time){
+    } else if (seconds >= event_expiry_time && twitch_connection_info.default_bind !== "key_empty" && twitch_connection_info.default_bind !== ""){
       console.log("RETURNING TO DEFAULT");
       let key_name = String(twitch_connection_info.default_bind).toLowerCase();
       let feed_message = "Returning to default state";
