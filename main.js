@@ -269,7 +269,12 @@ function write_data_to_file(connection_info){
 
 function read_data_from_file(){
   console.log(storage.getDataPath());
-  var json_obj = JSON.parse(storage.getSync('config.json'));
+  try {
+    var json_obj = JSON.parse(storage.getSync('config.json'));
+  } catch (error) {
+    json_obj = {}
+  }
+  
   console.log(json_obj);
   console.log(json_obj["user_key"]);
   new_app_id = json_obj.app_id === undefined ? "snbnlpo27abzy10fsg82bqqly26f80" : json_obj.app_id;
@@ -379,19 +384,25 @@ function retrieve_user_id(){
 }
 
 async function create_bindings_window(){
-  let success = await retrieve_channel_point_rewards();
-  if (success){
-    console.log(twitch_connection_info.reward_list);
-    bindings_window = settings_window;//createWindow("bind_settings.html", 560, 400, false);
-    //bindings_window.setMenu(null);
-    get_custom_rewards(bindings_window);
-    get_dicts(bindings_window); //twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict);
-    
-  } else {
+  if (twitch_connection_info.user_id === ""){
+    console.log("ouewhoiweoiewpohiewpowhi9epwehi9");
     settings_window.loadFile("settings.html");
+    console.log("loaded")
     open_settings_window();
+  } else {
+    settings_window.loadFile("bind_settings.html");
+    let success = await retrieve_channel_point_rewards();
+    if (success){
+      console.log(twitch_connection_info.reward_list);
+      bindings_window = settings_window;//createWindow("bind_settings.html", 560, 400, false);
+      //bindings_window.setMenu(null);
+      get_custom_rewards(bindings_window);
+      get_dicts(bindings_window); //twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict);
+    } else {
+      settings_window.loadFile("settings.html");
+      open_settings_window();
+    }
   }
-  
 }
 
 function test_create_feed_label(){
