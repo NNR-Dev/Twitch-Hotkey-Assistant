@@ -22,6 +22,7 @@ var bindings_window;
 var event_expiry_time = -1;
 
 const version_number = "23.02a";
+const expiry_time = 1681000000;
 
 //var hotkey_bind_dict = {};
 //var hotkey_duration_dict = {};
@@ -85,18 +86,24 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     ipcMain.on("open-misc-window", open_misc_window);
     ipcMain.on("close-setting-window", close_setting_window);
     ipcMain.on("open-about-window", open_about_window);
-    main_window = createWindow("index.html", width = 600, height = 455, is_resizable=true, title="Twitch Hotkey Assistant");
-    main_window.setMenu(null);
-    
-    main_window.on('close', function () {
-      app.quit();
-    })
-    read_data_from_file();
-    app.on('activate', () => {
-      if (BrowserWindow.getAllWindows().length === 0) {
-        main_window = createWindow("index.html");
-      }
-    });
+    const startup = can_use_app();
+    if (!startup){
+      dialog.showMessageBoxSync(options={title: 'Error', message: 'This version of Twitch Hotkey Assistant has expired, please visit https://okactuallyrob.itch.io/ to download the latest version.', type:'error'});
+      app.exit();
+    } else{
+      main_window = createWindow("index.html", width = 600, height = 455, is_resizable=true, title="Twitch Hotkey Assistant");
+      main_window.setMenu(null);
+      
+      main_window.on('close', function () {
+        app.quit();
+      })
+      read_data_from_file();
+      app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) {
+          main_window = createWindow("index.html");
+        }
+      });
+    }
   });
   
 
@@ -149,6 +156,16 @@ function stop_listener(){
     
   }
   
+}
+
+function can_use_app(){
+  const now = new Date()  
+  const utcMilllisecondsSinceEpoch = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);  
+  const utcSecondsSinceEpoch = Math.round(utcMilllisecondsSinceEpoch / 1000);
+  if (utcSecondsSinceEpoch >= expiry_time){
+    return false;
+  }
+  return true;
 }
 
 function array_remove_by_val(array, item){
