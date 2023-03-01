@@ -46,6 +46,7 @@ const request = require('request');
 const AsyncLock = require('async-lock');
 const { ToadScheduler, SimpleIntervalJob, Task } = require('toad-scheduler');
 const scheduler = new ToadScheduler()
+const logger = require('electron-log');
 var lock = new AsyncLock();
 config_path = path.join(app.getAppPath(), 'User_Data');
 storage.setDataPath(config_path);
@@ -124,13 +125,9 @@ function start_listener(){
   }
   let feed_message = "Started listener";
   main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
-  //press_key("e");
   const event_task = new Task('event_queue_manager', read_event_queue);
   const event_job = new SimpleIntervalJob({ seconds: 1, }, event_task);
   scheduler.addSimpleIntervalJob(event_job);
-  // lock.acquire(event_queue, function() {
-  //   event_queue.push(x);
-  // }).then(console.log(event_queue));
   ws = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws');
   ws.onopen = function(){
     
@@ -183,6 +180,7 @@ function press_key(key_name){
   // .release(key_name)
   // .go().then();//robot.stopJar);
   let feed_message = "Pressed key: "+key_name;
+  logger.info("Pressed key: "+key_name);
   main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
   robot.keyTap(key_name);
 }
@@ -193,19 +191,23 @@ function read_event_queue(){
     if (event_expiry_time == -1){
       if (event_queue.length > 0){
         let event_name = event_queue.shift();
-        let key_name = String(twitch_connection_info.hotkey_bind_dict[event_name]);
-        key_name = key_name.toLowerCase();
-        if (key_name !== "" && key_name !== "key_empty"){
-          let duration = parseInt(twitch_connection_info.hotkey_duration_dict[event_name]);
-          event_expiry_time = duration <= 0 ? -1 : seconds + duration;
-          let feed_message = "Responding to event: "+event_name;
-          main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
-          //console.log("PRESSING FOR EVENT " + key_name);
-          press_key(key_name);
-        }
+        let feed_message = "Responding to event: "+event_name;
+        logger.info("Responding to event: "+event_name);
+        main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
+        let key_names = twitch_connection_info.hotkey_bind_dict[event_name];
+        logger.info("Found key(s) associated with event: "+key_names);
+        key_names.forEach(key_name => {
+          //let key_name = String(twitch_connection_info.hotkey_bind_dict[event_name]);
+          key_name = key_name.toLowerCase();
+          if (key_name !== "" && key_name !== "key_empty"){
+            let duration = parseInt(twitch_connection_info.hotkey_duration_dict[event_name]);
+            event_expiry_time = duration <= 0 ? -1 : seconds + duration;
+            press_key(key_name);
+          
+          }
+        });
       }
     } else if (seconds >= event_expiry_time && twitch_connection_info.default_bind !== "key_empty" && twitch_connection_info.default_bind !== ""){
-      console.log("RETURNING TO DEFAULT");
       let key_name = String(twitch_connection_info.default_bind).toLowerCase();
       let feed_message = "Returning to default state";
       main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
@@ -220,24 +222,22 @@ function ws_parse_message(msg){
   msg = JSON.parse(msg);
   let message_type = msg.metadata.message_type;
   if (message_type === "session_welcome"){
+    logger.info("Received session_welcome message from Helix API")
     twitch_connection_info.session_id = msg.payload.session.id;
     ws_subscribe_topic();
   } else if (message_type === "session_keepalive"){
-    console.log("Keepalive message");
     lock.acquire(event_queue, function() {
-      console.log(event_queue);
+      logger.info("Current event queue status: " + String(event_queue));
     }).then(function(){});
   } else if (message_type === "notification") {
-    console.log("Notification");
     if(msg.metadata.subscription_type === twitch_connection_info.subscription_type){
-      console.log("Subscription");
+      logger.info("Received notification for subscribed event.");
       let redemption_status = msg.payload.event.status;
       if (redemption_status === "fulfilled"){
-        console.log("Fulfilled");
         let title = msg.payload.event.reward.title;
         if (title in twitch_connection_info.hotkey_bind_dict){
           let redeemer_name = msg.payload.event.user_name;
-          console.log("Appending");
+          logger.info("Event corresponds to configured hotkey in application. Appending to event queue.");
           let feed_message = String(redeemer_name) + " redeemed reward: "+String(title);
           main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
           lock.acquire(event_queue, function() {
@@ -269,37 +269,35 @@ function ws_subscribe_topic(){
   };
   function callback(error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log("%s", body);
+      logger.info("%s", body);
     }
   }
   request(options, callback);
 }
 
 function log_message(event, msg){
-  console.log(msg);
+  logger.info(msg);
 }
 
 function save_wrapper(){
-  console.log(app.getPath('userData'));
+  logger.info("User data path: " + app.getPath('userData'));
   write_data_to_file(twitch_connection_info);
 }
 
 function write_data_to_file(connection_info){
   json_string = JSON.stringify(connection_info);
-  console.log(json_string)
+  logger.info("Saving the following data: " + json_string)
   storage.set('config.json', json_string);
 }
 
 function read_data_from_file(){
-  console.log(storage.getDataPath());
+  logger.info("Reading user data from directory: " + storage.getDataPath());
   try {
     var json_obj = JSON.parse(storage.getSync('config.json'));
   } catch (error) {
     json_obj = {}
   }
-  
-  console.log(json_obj);
-  console.log(json_obj["user_key"]);
+  logger.info("Retrieved data: " + json_obj);
   new_app_id = json_obj.app_id === undefined ? "snbnlpo27abzy10fsg82bqqly26f80" : json_obj.app_id;
   new_user_key = json_obj.user_key === undefined ? "" : json_obj.user_key;
   new_user_id = json_obj.user_id === undefined ? "" : json_obj.user_id;
@@ -312,12 +310,10 @@ function read_data_from_file(){
   new_hotkey_duration_dict = json_obj.hotkey_duration_dict === undefined ? {} : json_obj.hotkey_duration_dict;
   new_default_bind = json_obj.default_bind === undefined ? "" : json_obj.default_bind;
   new_timestamp_type = json_obj.timestamp_type === undefined ? "time" : json_obj.timestamp_type;
-  console.log("new type:"+new_timestamp_type);
   twitch_connection_info = new TwitchConnectionInfo(new_app_id, new_user_key, new_user_id, 
                                                     new_username, new_session_id, new_subscription_type,
                                                     new_reward_list, new_key_obtained_time, new_hotkey_bind_dict,
                                                     new_hotkey_duration_dict, new_default_bind, new_timestamp_type);
-  //console.log(json_obj);
 }
 
 function close_window(){
@@ -330,9 +326,9 @@ function close_window(){
 }
 
 function send_hotkey_dicts(event, bind_dict, duration_dict, default_bind){
-  console.log("Doing binding!");
-  console.log(bind_dict);
-  console.log(duration_dict);
+  logger.info("Received hotkey configuration from settings window. New state of hotkey config:");
+  logger.info(bind_dict);
+  logger.info(duration_dict);
   twitch_connection_info.hotkey_bind_dict = bind_dict;
   twitch_connection_info.hotkey_duration_dict = duration_dict;
   twitch_connection_info.default_bind = default_bind;
@@ -350,9 +346,7 @@ function check_user_token_expiry(){
   return axios.get(url, config).then((response) => {
     
     if (response.status == 200){
-      //console.log(response);
       let expiry_time = response.data.expires_in; //rain#26915
-      //console.log(expiry_time);
       if (expiry_time < 2*86400){
         dialog.showMessageBox(options={title: 'Key Expires Soon', message:'User key will expire soon. Consider generating a new user key.', type:'warning'})
       }
@@ -408,15 +402,13 @@ function retrieve_user_id(){
 
 async function create_bindings_window(){
   if (twitch_connection_info.user_id === ""){
-    console.log("ouewhoiweoiewpohiewpowhi9epwehi9");
     settings_window.loadFile("settings.html");
-    console.log("loaded")
     open_settings_window();
   } else {
     settings_window.loadFile("bind_settings.html");
     let success = await retrieve_channel_point_rewards();
     if (success){
-      console.log(twitch_connection_info.reward_list);
+      logger.info("Opening bindings window with retrieved rewards: " + twitch_connection_info.reward_list);
       bindings_window = settings_window;//createWindow("bind_settings.html", 560, 400, false);
       //bindings_window.setMenu(null);
       get_custom_rewards(bindings_window);
@@ -435,25 +427,18 @@ function test_create_feed_label(){
 async function retrieve_channel_point_rewards(){
   let custom_rewards = [];
   let url = "https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id="+twitch_connection_info.user_id+"&perPage=50"
-  //console.log(`Bearer ${twitch_connection_info.user_key}`);
   let config = {
     headers: {
       'Authorization': `Bearer ${twitch_connection_info.user_key}`,
       'Client-Id': twitch_connection_info.app_id
     }
   };
-  //console.log(url);
   return axios.get(url, config).then((response) => {
-    //console.log(response.data.data);
     response.data.data.forEach(element => {
       custom_rewards.push(element.title);
-      //console.log(element.title);
     });
     twitch_connection_info.reward_list = custom_rewards;
     return true;
-      // console.log(response.data);
-      // twitch_connection_info.user_id=response.data.data[0].id;
-      // console.log(twitch_connection_info.user_id);
     }).catch(() => {
       dialog.showMessageBox(options={title: 'Error', message: 'Could not retrieve channel point rewards. Have you entered your authentication key?', type:'error'});
       return false;
@@ -483,7 +468,6 @@ function open_about_window(){
 }
 
 function open_misc_window(){
-  console.log("Timestamp type:"+twitch_connection_info.timestamp_type);
   settings_window.webContents.removeAllListeners('did-finish-load');
   settings_window.webContents.on('did-finish-load', function() {
     settings_window.webContents.send("get-misc-settings", twitch_connection_info.timestamp_type);
@@ -515,7 +499,6 @@ function get_key(key){
 }
 
 function get_dicts(b_window){
-  console.log("sending data back over!");
   //b_window.webContents.on('did-finish-load', function() {
     b_window.webContents.send('get-hotkey-dicts', twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict, twitch_connection_info.default_bind);
   //});
@@ -523,10 +506,8 @@ function get_dicts(b_window){
 
 
 function get_custom_rewards(b_window){
-  //console.log(custom_rewards);
-  //console.log(bindings_window);
+
   //b_window.webContents.on('did-finish-load', function() {
     b_window.webContents.send('custom-rewards', twitch_connection_info.reward_list);
   //});
-  //console.log("sent");
 }

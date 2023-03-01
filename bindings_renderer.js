@@ -309,15 +309,15 @@ function enable_navbar(){
         window.electronAPI.open_about_window();
     })
     user_anchor = document.getElementById("user_anchor");
-    window.electronAPI.log_message(user_anchor.className);
+    //window.electronAPI.log_message(user_anchor.className);
     user_anchor.setAttribute("class", "nav-link");
 
     settings_anchor = document.getElementById("settings_anchor");
-    window.electronAPI.log_message(settings_anchor.className);
+    //window.electronAPI.log_message(settings_anchor.className);
     settings_anchor.setAttribute("class", "nav-link");
 
     about_anchor = document.getElementById("about_anchor");
-    window.electronAPI.log_message(about_anchor.className);
+    //window.electronAPI.log_message(about_anchor.className);
     about_anchor.setAttribute("class", "nav-link");
     
     //save_bind_btn.style.display='inline';
@@ -337,7 +337,7 @@ function isNumeric(value) {
 }
 
 function load_binding_panels(){
-    window.electronAPI.log_message("starting loading");
+    //window.electronAPI.log_message("starting loading");
     default_bind_btn.value = default_state_bind;
     default_bind_btn.innerHTML = (default_state_bind === "key_empty" || default_state_bind === "") ? "Click to Bind" : default_state_bind;
     for (const [key, values] of Object.entries(hotkey_bind_dict)){
@@ -367,15 +367,14 @@ function load_binding_panels(){
 }
 
 function change_selecter_value(value, select){
-    window.electronAPI.log_message("changing val");
+    //window.electronAPI.log_message("changing val");
     const $options = Array.from(select.options);
     const optionToSelect = $options.find(item => item.text ===value);
     select.value = optionToSelect.value;
-    window.electronAPI.log_message("val changed");
+    //window.electronAPI.log_message("val changed");
   };
 
 function listen_for_key(e){
-    window.electronAPI.log_message(e.target.className);
     let className = e.target.className
     if (className.includes('bind_button')){
         var keynum;
@@ -383,12 +382,10 @@ function listen_for_key(e){
         e.preventDefault();
         //window.electronAPI.log_message(bind_button_id);
         if(window.event) { // IE                  
-        keynum = e.keyCode;
-        window.electronAPI.log_message("kejycode");
+            keynum = e.keyCode;
         } else if(e.which){ // Netscape/Firefox/Opera                 
-        keynum = e.which;
+            keynum = e.which;
         }
-        window.electronAPI.log_message("peepo");
         keynum = keyboardMap[keynum];
         button_ref = e.target;
         button_ref.value=keynum;
@@ -405,18 +402,14 @@ function get_binding_data(){
     hotkey_duration_dict = {}
     default_state_bind = default_bind_btn.value;
     let divs = document.querySelectorAll(".bind_div");
-    window.electronAPI.log_message(divs.length);
     for (let node of divs){
         let selecter = node.querySelector(".reward_selecter");
         let selected_reward = selecter.value;
-        window.electronAPI.log_message(selected_reward);
         let duration_field = node.querySelector(".duration_field");
         let bind_duration = duration_field.value;
         bind_duration = isNumeric(bind_duration) ? bind_duration : -1;
-        window.electronAPI.log_message(bind_duration);
         let bind_button = node.querySelector(".bind_button");
         let bind_key = bind_button.value;
-        window.electronAPI.log_message(bind_key);
         if (!(selected_reward in hotkey_bind_dict)){
             hotkey_bind_dict[selected_reward] = [bind_key];
             hotkey_duration_dict[selected_reward] = bind_duration;
@@ -489,13 +482,9 @@ function create_binding_panel(){
     delete_btn.style.float = "right";
 
     delete_btn.addEventListener('click', () =>{
-        window.electronAPI.log_message("clicked");
         let selecter = new_div.querySelector(".reward_selecter");
-        window.electronAPI.log_message("selecter");
         let selected_reward = selecter.value;
-        window.electronAPI.log_message("selected reward: "+selected_reward);
         delete hotkey_bind_dict[selected_reward];
-        window.electronAPI.log_message("removed bind");
         delete hotkey_duration_dict[selected_reward];
         delete_btn.parentElement.remove();
     });
