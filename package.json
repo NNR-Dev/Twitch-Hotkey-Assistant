@@ -1,7 +1,7 @@
 {
-  "name": "test",
-  "version": "1.0.0",
-  "description": "test app",
+  "name": "twitch-hotkey-assistant",
+  "version": "23.02a",
+  "description": "",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
-  "author": "",
+  "author": "NotNotRob",
   "license": "ISC",
   "devDependencies": {
     "@electron-forge/cli": "^6.0.5",
