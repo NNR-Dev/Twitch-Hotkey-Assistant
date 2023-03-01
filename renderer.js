@@ -67,6 +67,16 @@ function get_timestamp(timestamp_type){
     return datetime;
 }
 
+window.electronAPI.set_feed_button((event, is_started) => {
+    if(is_started){
+        start_btn.style.display="none";
+        stop_btn.style.display="inline-block";
+    } else {
+        start_btn.style.display="inline-block";
+        stop_btn.style.display="none";
+    }
+});
+
 window.electronAPI.add_feed_label((event, string, timestamp_type) => {
     let scroll_to_bottom = false;
     if (feed_div.scrollTop === (feed_div.scrollHeight - feed_div.offsetHeight)){

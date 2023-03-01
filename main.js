@@ -33,7 +33,7 @@ var twitch_connection_info;// = new TwitchConnectionInfo(app_id="snbnlpo27abzy10
 var settings_window;
 var event_queue = [];
 var ws;
-const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog, ipcRenderer} = require('electron');
 const storage = require('electron-json-storage')
 const path = require('path');
 const robot = require('robotjs');
@@ -122,19 +122,21 @@ function is_ready(){
 function start_listener(){
   if (!is_ready()){
     dialog.showMessageBox(options={title: 'Error', message: "Please authenticate this app with Twitch and set your keybinds in the settings panel!", type:'error'});
+    main_window.webContents.send("set-feed-button", false);
+  } else {
+    let feed_message = "Started listener";
+    main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
+    const event_task = new Task('event_queue_manager', read_event_queue);
+    const event_job = new SimpleIntervalJob({ seconds: 1, }, event_task);
+    scheduler.addSimpleIntervalJob(event_job);
+    ws = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws');
+    ws.onopen = function(){
+      
+    }
+    ws.on('message', function message(data){
+      ws_parse_message(data);
+    });
   }
-  let feed_message = "Started listener";
-  main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
-  const event_task = new Task('event_queue_manager', read_event_queue);
-  const event_job = new SimpleIntervalJob({ seconds: 1, }, event_task);
-  scheduler.addSimpleIntervalJob(event_job);
-  ws = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws');
-  ws.onopen = function(){
-    
-  }
-  ws.on('message', function message(data){
-    ws_parse_message(data);
-  });
 }
 
 function stop_listener(){
@@ -367,6 +369,7 @@ async function save_auth_settings(event, user_key){
   if (token_res){
     token_res = await retrieve_user_id();
     if (token_res){
+        settings_window.webContents.send("show-save-lbl", true);
         write_data_to_file(twitch_connection_info);
     }
   }
@@ -400,8 +403,9 @@ function retrieve_user_id(){
   });
 }
 
-async function create_bindings_window(){
+async function bindings_window_handler(){
   if (twitch_connection_info.user_id === ""){
+    logger.warn("Empty user_id, returning to settings page.");
     settings_window.loadFile("settings.html");
     open_settings_window();
   } else {
@@ -418,6 +422,10 @@ async function create_bindings_window(){
       open_settings_window();
     }
   }
+}
+
+async function create_bindings_window(){
+  setTimeout(bindings_window_handler, 6000);
 }
 
 function test_create_feed_label(){

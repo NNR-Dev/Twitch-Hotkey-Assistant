@@ -24,6 +24,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     close_setting_window: () => ipcRenderer.send("close-setting-window"),
     open_about_window: () => ipcRenderer.send("open-about-window"),
     get_version_data: (version_number) => ipcRenderer.on('get-version-data', version_number),
+    set_feed_button: (is_started) => ipcRenderer.on('set-feed-button', is_started),
+    show_save_lbl: (can_show) => ipcRenderer.on("show-save-lbl", can_show),
 });
 
 contextBridge.exposeInMainWorld('versions', {
