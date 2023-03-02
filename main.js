@@ -364,16 +364,25 @@ function check_user_token_expiry(){
 }
 
 async function save_auth_settings(event, user_key, callback_name){
-  twitch_connection_info.user_key = user_key;
-  let token_res = await check_user_token_expiry();
-  if (token_res){
-    token_res = await retrieve_user_id();
-    await retrieve_channel_point_rewards();
+  if (twitch_connection_info.user_key !== user_key){
+    twitch_connection_info.user_id = "";
+    twitch_connection_info.user_key = user_key;
+    let token_res = await check_user_token_expiry();
     if (token_res){
-        settings_window.webContents.send("show-save-lbl", true);
-        write_data_to_file(twitch_connection_info);
-        settings_window.webContents.send("save-callback", callback_name)
+      token_res = await retrieve_user_id();
+      await retrieve_channel_point_rewards();
+      if (token_res){
+          settings_window.webContents.send("show-save-lbl", true);
+          write_data_to_file(twitch_connection_info);
+          settings_window.webContents.send("save-callback", callback_name);
+      }
     }
+  } else if (twitch_connection_info.user_key !== "" && twitch_connection_info.user_id !== ""){
+    console.log("Didn't need to save");
+    settings_window.webContents.send("save-callback", callback_name);
+  } else {
+    console.log("Nothing");
+    settings_window.webContents.send("save-callback", callback_name);
   }
 }
 
@@ -386,7 +395,7 @@ function save_misc_settings(event, timestamp_type){
 function retrieve_user_id(){
   // let req = new XMLHttpRequest();
   let url = "https://id.twitch.tv/oauth2/validate"
-  twitch_connection_info.user_id = "";
+  //twitch_connection_info.user_id = "";
   let config = {
     headers: {
       'Authorization': `Bearer ${twitch_connection_info.user_key}`
