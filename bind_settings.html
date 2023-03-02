@@ -25,7 +25,7 @@
 			<div style="float:left;margin-right:4px;height:60px;width:120px;position:relative;">
 				<button type="button" onclick="create_binding_panel()" class="top_btn round_btn" id="add_hotkey_btn" style="width:120px; position:absolute;top:39.2%;" >Add New Hotkey</button>
 			</div>
-		  <div style="float:left;height:60px; position:relative;">
+			<div style="float:left;height:60px; width:126px; position:relative;">
 				<div style="height:24px; width:140px;">
 					<label class="block_lbl twitch_lbl" style="float:left;">Default Hotkey</label>
 					<img id="info_tooltip" src="images/feather/info_white.svg" alt="images/feather/info_white.svg" style="float:left; height:16px; width: 16px; position:absolute; top:2px; left: 102px;" data-toggle="tooltip" data-placement="top" title="Use this if you want Twitch events to temporarily change the state of an application. This hotkey represents the 'default' state to return to, after a user-defined period of time.">
@@ -33,6 +33,9 @@
 				<div style="height:36px; position:relative; display:block; margin-left: 6px;">
 					<button type="button" class="bind_button round_btn" value="key_empty" id="default_bind_btn" style="float: left; width:110px; position:absolute;" data-toggle="tooltip" data-placement="top" title="Left-click, then press any key to bind.">Click to Bind</button>
 				</div>
+			</div>
+			<div style="float:left;height:60px; position:relative;">
+				<button type="button" onclick="refresh_rewards()" class="top_btn round_btn" id="refresh_btn" style="width:150px; position:absolute;top:39.2%;" >Refresh Rewards List</button>
 			</div>
 		</div>
 		<div style="float:left;height:30px; width:100%">

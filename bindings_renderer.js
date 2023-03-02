@@ -366,6 +366,10 @@ function load_binding_panels(){
     }
 }
 
+function refresh_rewards(){
+    window.electronAPI.refresh_rewards();
+}
+
 function change_selecter_value(value, select){
     //window.electronAPI.log_message("changing val");
     const $options = Array.from(select.options);

@@ -87,6 +87,7 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     ipcMain.on("open-misc-window", open_misc_window);
     ipcMain.on("close-setting-window", close_setting_window);
     ipcMain.on("open-about-window", open_about_window);
+    ipcMain.on("refresh-rewards", refresh_rewards);
     const startup = can_use_app();
     if (!startup){
       dialog.showMessageBoxSync(options={title: 'Error', message: 'This version of Twitch Hotkey Assistant has expired, please visit https://okactuallyrob.itch.io/ to download the latest version.', type:'error'});
@@ -384,6 +385,12 @@ async function save_auth_settings(event, user_key, callback_name){
     console.log("Nothing");
     settings_window.webContents.send("save-callback", callback_name);
   }
+}
+
+async function refresh_rewards(event){
+  await retrieve_channel_point_rewards();
+  console.log("sending rewards back ooooooover");
+  get_custom_rewards(settings_window);
 }
 
 function save_misc_settings(event, timestamp_type){
