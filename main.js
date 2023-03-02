@@ -377,6 +377,8 @@ async function save_auth_settings(event, user_key, callback_name){
           write_data_to_file(twitch_connection_info);
           settings_window.webContents.send("save-callback", callback_name);
       }
+    } else if (callback_name === "close"){
+      settings_window.webContents.send("save-callback", callback_name);
     }
   } else if (twitch_connection_info.user_key !== "" && twitch_connection_info.user_id !== ""){
     console.log("Didn't need to save");
