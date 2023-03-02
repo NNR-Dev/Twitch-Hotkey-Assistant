@@ -6,7 +6,7 @@ const misc_panel_btn = document.getElementById('settings_nav');
 const version_lbl = document.getElementById('version_lbl');
 
 bind_panel_btn.addEventListener('click', () => {
-    window.electronAPI.create_bindings_window();
+    window.electronAPI.create_bindings_window("about");
 })
 
 user_panel_btn.addEventListener('click', () => {

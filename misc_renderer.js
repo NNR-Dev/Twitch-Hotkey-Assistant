@@ -16,7 +16,7 @@ function save_misc_settings(){
 
 bind_panel_btn.addEventListener('click', () => {
     save_misc_settings();
-    window.electronAPI.create_bindings_window();
+    window.electronAPI.create_bindings_window("misc");
 })
 
 user_panel_btn.addEventListener('click', () => {

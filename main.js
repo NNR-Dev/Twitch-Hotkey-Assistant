@@ -363,14 +363,16 @@ function check_user_token_expiry(){
   });
 }
 
-async function save_auth_settings(event, user_key){
+async function save_auth_settings(event, user_key, callback_name){
   twitch_connection_info.user_key = user_key;
   let token_res = await check_user_token_expiry();
   if (token_res){
     token_res = await retrieve_user_id();
+    await retrieve_channel_point_rewards();
     if (token_res){
         settings_window.webContents.send("show-save-lbl", true);
         write_data_to_file(twitch_connection_info);
+        settings_window.webContents.send("save-callback", callback_name)
     }
   }
 }
@@ -384,6 +386,7 @@ function save_misc_settings(event, timestamp_type){
 function retrieve_user_id(){
   // let req = new XMLHttpRequest();
   let url = "https://id.twitch.tv/oauth2/validate"
+  twitch_connection_info.user_id = "";
   let config = {
     headers: {
       'Authorization': `Bearer ${twitch_connection_info.user_key}`
@@ -403,29 +406,47 @@ function retrieve_user_id(){
   });
 }
 
-async function bindings_window_handler(){
-  if (twitch_connection_info.user_id === ""){
-    logger.warn("Empty user_id, returning to settings page.");
-    settings_window.loadFile("settings.html");
-    open_settings_window();
+async function bindings_window_handler(sender){
+  if (twitch_connection_info.user_id === "" || twitch_connection_info.user_key === ""){
+    logger.warn("Empty user_id, returning to previous page.");
+    settings_window.loadFile(sender);
+    //open_settings_window();
   } else {
-    settings_window.loadFile("bind_settings.html");
-    let success = await retrieve_channel_point_rewards();
+    await settings_window.loadFile("bind_settings.html");
+    let success = (twitch_connection_info.reward_list.length !== 0)//await retrieve_channel_point_rewards();
     if (success){
       logger.info("Opening bindings window with retrieved rewards: " + twitch_connection_info.reward_list);
       bindings_window = settings_window;//createWindow("bind_settings.html", 560, 400, false);
       //bindings_window.setMenu(null);
+      console.log("getting rew");
       get_custom_rewards(bindings_window);
+      console.log("getting dicts");
       get_dicts(bindings_window); //twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict);
     } else {
-      settings_window.loadFile("settings.html");
-      open_settings_window();
+      settings_window.loadFile(sender);
+      //open_settings_window();
     }
   }
 }
 
-async function create_bindings_window(){
-  setTimeout(bindings_window_handler, 6000);
+async function create_bindings_window(event, sender){
+  let duration = 0;
+  console.log(sender);
+  let fallback_page = "settings.html"
+  if (sender === "settings"){
+    //duration = 6000;
+    fallback_page = "settings.html"
+  } else if (sender === "misc") {
+    duration = 0;
+    fallback_page = "misc_settings.html";
+  } else if (sender === "about") {
+    duration = 0;
+    fallback_page = "about.html"
+  }
+  setTimeout(function() {
+    bindings_window_handler(fallback_page)
+  }
+  , duration);
 }
 
 function test_create_feed_label(){
@@ -486,7 +507,7 @@ function open_misc_window(){
 function create_settings_window(){
   settings_window = createWindow("settings.html", 560, 420, true, "Settings");
   settings_window.on('close', event_close_handler);
-  settings_window.setMenu(null)
+  //settings_window.setMenu(null)
   open_settings_window();
 }
 
