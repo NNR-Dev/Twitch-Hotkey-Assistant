@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Settings</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
+  </head>
+  <body class="bg-dark-twitch" id="body" style="height:100%">
+    <div class="container-fluid text-white bg-dark-twitch" style="height:100%">	
+		<div style="height:45px">
+			<ul class="nav nav-tabs">
+				<li class="nav-item" id="user_nav"> <a class="nav-link active" href="#">User Data</a> </li>
+				<li class="nav-item" id="bind_nav"> <a class="nav-link" href="#">Hotkey Settings</a> </li>
+				<li class="nav-item" id="settings_nav"> <a class="nav-link" href="misc_settings.html">Misc. Settings&nbsp;</a> </li>
+				<li class="nav-item" id="about_nav"> <a class="nav-link" href="about.html">About&nbsp;</a> </li>
+			</ul>
+		</div>
+		<div style="margin-top: 10px; margin-bottom:10px; height: 30px;">
+			<label id="auth_warning_lbl" class="twitch_lbl" style="display:block;">Please authenticate this application with Twitch before modifying other settings.</label>
+		</div>
+    	<div style="height: 40px;">
+		  <button type="button" class="round_btn" id="twitch_auth_button">Authenticate with Twitch</button>
+    	</div>
+	  	<div style="height: 40px;">
+			<label class="twitch_lbl" for="textfield">Twitch User Key:&nbsp;&nbsp;</label>
+    	<input type="text" id="user_key_field" class="twitch">
+		</div>
+		<br>
+		<label id="saving_info_lbl" class="twitch_lbl" style="display:none;">Saving user data, please wait...</label>
+		<div class="settings_empty_div">
+		</div>
+		<!--<div style="height:50px;">
+		  <button type="button" class="round_btn" id="submit_auth_button">Submit User Settings</button>
+    	</div>-->
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap-4.4.1.js"></script>
+  </body>
+  <script src="./settings_renderer.js"></script>
+</html>

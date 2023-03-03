@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%">
+  <head>
+	<link href="css/bootstrap-4.4.1.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Settings</title>
+    <!-- Bootstrap -->
+  </head>
+  <body class="bg-dark-twitch" id="body" style="height:100%">
+    <div class="container-fluid text-white bg-dark-twitch" style="height:100%">	
+		<div style="height:45px">
+			<ul class="nav nav-tabs">
+				<li class="nav-item" id="user_nav"> <a class="nav-link" href="settings.html">User Data</a> </li>
+				<li class="nav-item" id="bind_nav"> <a class="nav-link" href="#">Hotkey Settings</a> </li>
+				<li class="nav-item"> <a class="nav-link active" href="#">Misc. Settings&nbsp;</a> </li>
+				<li class="nav-item" id="about_nav"> <a class="nav-link" href="about.html">About&nbsp;</a> </li>
+			</ul>
+		</div>
+		<div style="margin-top: 10px; margin-bottom:10px; height: 30px;">
+			<label class="twitch_lbl large_text">Timestamp appearance:</label>
+			<div>
+				<div style="width:160px; height:40px; float:left;">
+					<div style="width:100%;height:20px;text-align:center;">
+						<input type="radio" name="timestamp_radio_group" value="datetime" id="timestamp_radio_group_0" class="setting_radio" style="text-align:center;width:100%;">
+					</div>
+					<div style="width:100%;height:20px;display:block;text-align:center;">
+						<label class="twitch_lbl" style="display:block;">[01/01/1990] 12:41:35</label>
+					</div>
+				</div>
+				<div style="width:160px; height:40px; float:left;">
+					<div style="width:100%;height:20px;display:block;text-align:center;">
+						<input type="radio" name="timestamp_radio_group" value="time" id="timestamp_radio_group_1" class="setting_radio" style="text-align:center;width:100%;">
+					</div>
+					<div style="width:100%;height:20px;display:block;text-align:center;">
+						<label class="twitch_lbl" style="display:block;">12:41:35</label>
+					</div>
+				</div>
+				<div style="width:160px; height:40px; float:left;">
+				  	<div style="width:100%;height:20px;display:block;text-align:center;">
+						<input type="radio" name="timestamp_radio_group" value="no_timestamp" id="timestamp_radio_group_2" class="setting_radio" style="text-align:center;width:100%;">
+					</div>
+					<div style="width:100%;height:20px;display:block;text-align:center;">
+						<label class="twitch_lbl" style="display:block;">None</label>
+					</div>
+			  </div>
+			</div>
+		</div>
+    	
+
+		<div class="settings_empty_div">
+		</div>
+		<!--<div style="height:50px;">
+		  <button type="button" class="round_btn" id="save_settings_btn">Save Settings</button>
+    	</div>-->
+	  </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap-4.4.1.js"></script>
+  </body>
+  <script src="misc_renderer.js"></script>
+</html>
