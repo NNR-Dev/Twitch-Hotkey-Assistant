@@ -381,18 +381,22 @@ async function save_auth_settings(event, user_key, callback_name){
       settings_window.webContents.send("save-callback", callback_name);
     }
   } else if (twitch_connection_info.user_key !== "" && twitch_connection_info.user_id !== ""){
-    console.log("Didn't need to save");
     settings_window.webContents.send("save-callback", callback_name);
   } else {
-    console.log("Nothing");
     settings_window.webContents.send("save-callback", callback_name);
   }
 }
 
 async function refresh_rewards(event){
   await retrieve_channel_point_rewards();
-  console.log("sending rewards back ooooooover");
   get_custom_rewards(settings_window);
+  remove_panels(settings_window);
+  settings_window.webContents.send("load-binding-panels","");
+  //get_dicts(settings_window);
+}
+
+function remove_panels(b_window){
+  b_window.webContents.send("remove-panels", "");
 }
 
 function save_misc_settings(event, timestamp_type){
@@ -436,9 +440,7 @@ async function bindings_window_handler(sender){
       logger.info("Opening bindings window with retrieved rewards: " + twitch_connection_info.reward_list);
       bindings_window = settings_window;//createWindow("bind_settings.html", 560, 400, false);
       //bindings_window.setMenu(null);
-      console.log("getting rew");
       get_custom_rewards(bindings_window);
-      console.log("getting dicts");
       get_dicts(bindings_window); //twitch_connection_info.hotkey_bind_dict, twitch_connection_info.hotkey_duration_dict);
     } else {
       settings_window.loadFile(sender);
@@ -449,7 +451,6 @@ async function bindings_window_handler(sender){
 
 async function create_bindings_window(event, sender){
   let duration = 0;
-  console.log(sender);
   let fallback_page = "settings.html"
   if (sender === "settings"){
     //duration = 6000;
@@ -525,7 +526,7 @@ function open_misc_window(){
 function create_settings_window(){
   settings_window = createWindow("settings.html", 560, 420, true, "Settings");
   settings_window.on('close', event_close_handler);
-  //settings_window.setMenu(null)
+  settings_window.setMenu(null)
   open_settings_window();
 }
 

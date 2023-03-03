@@ -288,6 +288,7 @@ const about_panel_btn = document.getElementById('about_nav');
 
 window.electronAPI.save_current_window((event) => {
     get_binding_data();
+    window.electronAPI.send_hotkey_dicts(hotkey_bind_dict, hotkey_duration_dict, default_state_bind);
     window.electronAPI.close_setting_window();
 })
 
@@ -298,14 +299,17 @@ window.electronAPI.get_rewards((event, value) => {
 function enable_navbar(){
     user_panel_btn.addEventListener('click', () => {
         get_binding_data();
+        window.electronAPI.send_hotkey_dicts(hotkey_bind_dict, hotkey_duration_dict, default_state_bind);
         window.electronAPI.open_settings_window();
     });
     misc_panel_btn.addEventListener('click', () => {
         get_binding_data();
+        window.electronAPI.send_hotkey_dicts(hotkey_bind_dict, hotkey_duration_dict, default_state_bind);
         window.electronAPI.open_misc_window();
     })
     about_panel_btn.addEventListener('click', () => {
         get_binding_data();
+        window.electronAPI.send_hotkey_dicts(hotkey_bind_dict, hotkey_duration_dict, default_state_bind);
         window.electronAPI.open_about_window();
     })
     user_anchor = document.getElementById("user_anchor");
@@ -331,10 +335,22 @@ window.electronAPI.get_hotkey_dicts((event, bind_dict, duration_dict, default_bi
     enable_navbar();
 })
 
+window.electronAPI.remove_panels((event) => {
+    let divs = document.querySelectorAll(".bind_div");
+    for (let node of divs){
+        let selecter = node.querySelector(".reward_selecter");
+        node.remove();
+    }
+})
+
 //spaghetti courtesy of https://stackoverflow.com/a/24457420
 function isNumeric(value) {
     return /^\d+$/.test(value);
 }
+
+window.electronAPI.load_binding_panels((event) => {
+    load_binding_panels();
+});
 
 function load_binding_panels(){
     //window.electronAPI.log_message("starting loading");
@@ -367,24 +383,21 @@ function load_binding_panels(){
 }
 
 function refresh_rewards(){
+    get_binding_data();
     window.electronAPI.refresh_rewards();
 }
 
 function change_selecter_value(value, select){
-    //window.electronAPI.log_message("changing val");
     const $options = Array.from(select.options);
     const optionToSelect = $options.find(item => item.text ===value);
     select.value = optionToSelect.value;
-    //window.electronAPI.log_message("val changed");
   };
 
 function listen_for_key(e){
     let className = e.target.className
     if (className.includes('bind_button')){
         var keynum;
-        //window.electronAPI.log_message("bababababababababa");
         e.preventDefault();
-        //window.electronAPI.log_message(bind_button_id);
         if(window.event) { // IE                  
             keynum = e.keyCode;
         } else if(e.which){ // Netscape/Firefox/Opera                 
@@ -423,7 +436,7 @@ function get_binding_data(){
             hotkey_bind_dict[selected_reward] = bind_list;
         }
     }
-    window.electronAPI.send_hotkey_dicts(hotkey_bind_dict, hotkey_duration_dict, default_state_bind);
+    
 }
 
 function create_binding_panel(){

@@ -28,6 +28,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     show_save_lbl: (can_show) => ipcRenderer.on("show-save-lbl", can_show),
     save_callback: (callback_name) => ipcRenderer.on("save-callback", callback_name),
     refresh_rewards: () => ipcRenderer.send("refresh-rewards",),
+    remove_panels: (event) => ipcRenderer.on("remove-panels", event),
+    load_binding_panels: (event) => ipcRenderer.on("load-binding-panels", event),
 });
 
 contextBridge.exposeInMainWorld('versions', {
