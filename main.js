@@ -90,7 +90,7 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     ipcMain.on("refresh-rewards", refresh_rewards);
     const startup = can_use_app();
     if (!startup){
-      dialog.showMessageBoxSync(options={title: 'Error', message: 'This version of Twitch Hotkey Assistant has expired, please visit https://okactuallyrob.itch.io/ to download the latest version.', type:'error'});
+      dialog.showMessageBoxSync(options={title: 'Error', message: 'This version of Twitch Hotkey Assistant has expired, please visit https://nnr-dev.itch.io/ to download the latest version.', type:'error'});
       app.exit();
     } else{
       main_window = createWindow("index.html", width = 600, height = 455, is_resizable=true, title="Twitch Hotkey Assistant");
@@ -496,7 +496,7 @@ async function retrieve_channel_point_rewards(){
 }
 
 function create_auth_window(){
-  var redirect_url = "https://okactuallyrob.github.io/Twitch-Authenticator/";
+  var redirect_url = "https://nnr-dev.github.io/THA-Authenticator/";
   var auth_url = "https://id.twitch.tv/oauth2/authorize?client_id=" + twitch_connection_info.app_id + "&redirect_uri="+encodeURIComponent(redirect_url) + "&response_type=token&scope=channel:read:redemptions";
   w = createWindow("index.html", title="Authentication Window");
   w.setMenu(null);
