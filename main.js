@@ -125,6 +125,7 @@ function start_listener(){
     dialog.showMessageBox(options={title: 'Error', message: "Please authenticate this app with Twitch and set your keybinds in the settings panel!", type:'error'});
     main_window.webContents.send("set-feed-button", false);
   } else {
+    main_window.webContents.send("toggle-settings", false);
     let feed_message = "Started listener";
     main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
     const event_task = new Task('event_queue_manager', read_event_queue);
@@ -143,6 +144,7 @@ function start_listener(){
 function stop_listener(){
   let feed_message = "Stopped listener";
   main_window.webContents.send("add-feed-label", feed_message, twitch_connection_info.timestamp_type);
+  main_window.webContents.send("toggle-settings", true);
   try {
     scheduler.stop();
     if (ws.readyState !== WebSocket.OPEN){

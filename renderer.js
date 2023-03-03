@@ -77,6 +77,14 @@ window.electronAPI.set_feed_button((event, is_started) => {
     }
 });
 
+window.electronAPI.toggle_settings((event, enable) => {
+    if (enable){
+        set_button.parentNode.style.display = 'inline-block';
+    } else{
+        set_button.parentNode.style.display = 'none';
+    }
+})
+
 window.electronAPI.add_feed_label((event, string, timestamp_type) => {
     let scroll_to_bottom = false;
     if (feed_div.scrollTop === (feed_div.scrollHeight - feed_div.offsetHeight)){

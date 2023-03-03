@@ -30,6 +30,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     refresh_rewards: () => ipcRenderer.send("refresh-rewards",),
     remove_panels: (event) => ipcRenderer.on("remove-panels", event),
     load_binding_panels: (event) => ipcRenderer.on("load-binding-panels", event),
+    toggle_settings: (enable) => ipcRenderer.on("toggle-settings", enable),
 });
 
 contextBridge.exposeInMainWorld('versions', {
