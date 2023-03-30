@@ -21,7 +21,7 @@ var bindings_window;
 
 var event_expiry_time = -1;
 
-const version_number = "23.02a";
+const version_number = "23.03a";
 const expiry_time = 1681000000;
 
 //var hotkey_bind_dict = {};
@@ -90,7 +90,7 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
     ipcMain.on("refresh-rewards", refresh_rewards);
     const startup = can_use_app();
     if (!startup){
-      dialog.showMessageBoxSync(options={title: 'Error', message: 'This version of Twitch Hotkey Assistant has expired, please visit https://nnr-dev.itch.io/ to download the latest version.', type:'error'});
+      dialog.showMessageBoxSync(options={title: 'Error', message: 'This version of Twitch Hotkey Assistant has expired, please visit https://okactuallyrob.itch.io/ to download the latest version.', type:'error'});
       app.exit();
     } else{
       main_window = createWindow("index.html", width = 600, height = 455, is_resizable=true, title="Twitch Hotkey Assistant");
@@ -368,23 +368,34 @@ function check_user_token_expiry(){
 
 async function save_auth_settings(event, user_key, callback_name){
   if (twitch_connection_info.user_key !== user_key){
+    settings_window.webContents.send("show-save-lbl", true);
     twitch_connection_info.user_id = "";
     twitch_connection_info.user_key = user_key;
     let token_res = await check_user_token_expiry();
     if (token_res){
+      settings_window.webContents.send("show-valid-key-img", true);
       token_res = await retrieve_user_id();
       await retrieve_channel_point_rewards();
       if (token_res){
-          settings_window.webContents.send("show-save-lbl", true);
           write_data_to_file(twitch_connection_info);
           settings_window.webContents.send("save-callback", callback_name);
       }
-    } else if (callback_name === "close"){
-      settings_window.webContents.send("save-callback", callback_name);
+    } else{ 
+      twitch_connection_info.user_key = "";
+      twitch_connection_info.user_id = "";
+      if (callback_name === "close"){
+        settings_window.webContents.send("save-callback", callback_name);
+      } else {
+        settings_window.webContents.send("show-save-lbl", false);
+      }
+      
     }
   } else if (twitch_connection_info.user_key !== "" && twitch_connection_info.user_id !== ""){
+    settings_window.webContents.send("show-valid-key-img", true);
     settings_window.webContents.send("save-callback", callback_name);
   } else {
+    twitch_connection_info.user_key = "";
+    twitch_connection_info.user_id = "";
     settings_window.webContents.send("save-callback", callback_name);
   }
 }
@@ -496,7 +507,7 @@ async function retrieve_channel_point_rewards(){
 }
 
 function create_auth_window(){
-  var redirect_url = "https://nnr-dev.github.io/THA-Authenticator/";
+  var redirect_url = "https://okactuallyrob.github.io/Twitch-Authenticator/";
   var auth_url = "https://id.twitch.tv/oauth2/authorize?client_id=" + twitch_connection_info.app_id + "&redirect_uri="+encodeURIComponent(redirect_url) + "&response_type=token&scope=channel:read:redemptions";
   w = createWindow("index.html", title="Authentication Window");
   w.setMenu(null);
