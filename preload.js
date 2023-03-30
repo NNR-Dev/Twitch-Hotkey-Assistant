@@ -26,6 +26,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     get_version_data: (version_number) => ipcRenderer.on('get-version-data', version_number),
     set_feed_button: (is_started) => ipcRenderer.on('set-feed-button', is_started),
     show_save_lbl: (can_show) => ipcRenderer.on("show-save-lbl", can_show),
+    show_valid_key_img: (can_show) => ipcRenderer.on("show-valid-key-img", can_show),
     save_callback: (callback_name) => ipcRenderer.on("save-callback", callback_name),
     refresh_rewards: () => ipcRenderer.send("refresh-rewards",),
     remove_panels: (event) => ipcRenderer.on("remove-panels", event),

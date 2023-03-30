@@ -1,7 +1,7 @@
 {
   "name": "twitch-hotkey-assistant",
   "version": "23.02a",
-  "description": "",
+  "description": "Twitch Hotkey Assistant",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
