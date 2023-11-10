@@ -1,6 +1,6 @@
 class TwitchConnectionInfo {
   constructor(app_id, user_key, user_id, username, session_id, subscription_type, reward_list, 
-    key_obtained_time, hotkey_bind_dict, hotkey_duration_dict, default_bind, timestamp_type){
+    key_obtained_time, hotkey_bind_dict, hotkey_duration_dict, default_bind, timestamp_type, first_time_user){
     this.app_id = app_id;
     this.user_key = user_key;
     this.user_id = user_id;
@@ -13,6 +13,7 @@ class TwitchConnectionInfo {
     this.hotkey_duration_dict = hotkey_duration_dict;
     this.default_bind = default_bind;
     this.timestamp_type = timestamp_type;
+    this.first_time_user = first_time_user;
   }
 }
 
@@ -22,7 +23,7 @@ var bindings_window;
 var event_expiry_time = -1;
 
 const version_number = "23.03a";
-const expiry_time = 1681000000;
+const expiry_time = 1706659200;
 
 //var hotkey_bind_dict = {};
 //var hotkey_duration_dict = {};
@@ -100,11 +101,17 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
         app.quit();
       })
       read_data_from_file();
+      
       app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
           main_window = createWindow("index.html");
+          
         }
       });
+      if (twitch_connection_info.first_time_user === 1){
+        dialog.showMessageBox(options={title: 'Welcome!', message: 'First time welcome message!'});
+        twitch_connection_info.first_time_user = 0;
+      }
     }
   });
   
@@ -131,7 +138,7 @@ function start_listener(){
     const event_task = new Task('event_queue_manager', read_event_queue);
     const event_job = new SimpleIntervalJob({ seconds: 1, }, event_task);
     scheduler.addSimpleIntervalJob(event_job);
-    ws = new WebSocket('wss://eventsub-beta.wss.twitch.tv/ws');
+    ws = new WebSocket('wss://eventsub.wss.twitch.tv/ws');
     ws.onopen = function(){
       
     }
@@ -315,10 +322,12 @@ function read_data_from_file(){
   new_hotkey_duration_dict = json_obj.hotkey_duration_dict === undefined ? {} : json_obj.hotkey_duration_dict;
   new_default_bind = json_obj.default_bind === undefined ? "" : json_obj.default_bind;
   new_timestamp_type = json_obj.timestamp_type === undefined ? "time" : json_obj.timestamp_type;
+  new_first_time_user = json_obj.first_time_user === undefined ? 1 : json_obj.first_time_user;
   twitch_connection_info = new TwitchConnectionInfo(new_app_id, new_user_key, new_user_id, 
                                                     new_username, new_session_id, new_subscription_type,
                                                     new_reward_list, new_key_obtained_time, new_hotkey_bind_dict,
-                                                    new_hotkey_duration_dict, new_default_bind, new_timestamp_type);
+                                                    new_hotkey_duration_dict, new_default_bind, new_timestamp_type,
+                                                    new_first_time_user);
 }
 
 function close_window(){
@@ -507,7 +516,7 @@ async function retrieve_channel_point_rewards(){
 }
 
 function create_auth_window(){
-  var redirect_url = "https://okactuallyrob.github.io/Twitch-Authenticator/";
+  var redirect_url = "https://nnr-dev.github.io/THA-Authenticator/";
   var auth_url = "https://id.twitch.tv/oauth2/authorize?client_id=" + twitch_connection_info.app_id + "&redirect_uri="+encodeURIComponent(redirect_url) + "&response_type=token&scope=channel:read:redemptions";
   w = createWindow("index.html", title="Authentication Window");
   w.setMenu(null);
