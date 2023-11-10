@@ -109,7 +109,8 @@ const createWindow = (html_path, width = 800, height = 600, is_resizable = true,
         }
       });
       if (twitch_connection_info.first_time_user === 1){
-        dialog.showMessageBox(options={title: 'Welcome!', message: 'First time welcome message!'});
+        dialog.showMessageBox(options={title: 'Welcome!', message: 'To get started, visit the settings panel and authorise this application using your Twitch account. \nThen, assign Channel Point Rewards to corresponding hotkeys in OBS/Streamlabs, or any other software you wish to control. \n\nFor example, if you have a Channel Point Reward "clown nose", and a hotkey in Veadotube Mini where "F8" swaps your avatar to one with a clown nose: add a new binding in the bindings tab of the settings menu, select "clown nose" as the trigger and "F8" as the hotkey.',
+      type:'info'});
         twitch_connection_info.first_time_user = 0;
       }
     }
